@@ -17,16 +17,28 @@
 
 <script setup>
 import { defineComponent, ref } from 'vue'
-import { fetchPrices } from 'src/components/getPrices.js'
 
 defineComponent({
   name: 'TestingPage',
 })
 
 const boxTitle = ref('Prices')
-// const prices = ref('Loading')
-// const pricesLoaded = ref(false)
-const { prices, pricesLoaded } = fetchPrices()
+const prices = ref('Loading')
+const pricesLoaded = ref(false)
+
+async function fetchPrices() {
+  try {
+    let res = await fetch(
+      `https://api.v4v.app/v1/cryptoprices/?use_cache=false`
+    )
+    prices.value = await res.json()
+    pricesLoaded.value = true
+  } catch (err) {
+    console.error(err)
+  }
+}
+
+fetchPrices()
 </script>
 
 <!--
