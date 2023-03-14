@@ -4,7 +4,7 @@
       class="my-card text-white q-ma-lg"
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
     >
-      <q-card-section>
+      <q-card-section v-if="pricesLoaded">
         <div class="text-h6">{{ boxTitle }}</div>
         <div class="text-subtitle2">from v4v.app</div>
       </q-card-section>
@@ -24,12 +24,15 @@ defineComponent({
 
 const boxTitle = ref('Prices')
 const prices = ref('Loading')
+const pricesLoaded = ref(false)
 
 async function fetchData() {
   try {
     let res = await fetch(
-      `https://api.v4v.app/v1/cryptoprices/?use_cache=false`)
+      `https://api.v4v.app/v1/cryptoprices/?use_cache=false`
+    )
     prices.value = await res.json()
+    pricesLoaded.value = true
   } catch (err) {
     console.error(err)
   }
