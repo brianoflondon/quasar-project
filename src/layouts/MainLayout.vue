@@ -10,19 +10,6 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-tabs
-          dense
-          active-bg-color="amber-10"
-          align="justify"
-          narrow-indicator
-        >
-          <q-route-tab name="getlightning" icon="bolt" to="/lnd" label="LTN" />
-          <q-route-tab name="gethive" icon="fa-brands fa-hive" to= "/hive" label="Hive" />
-          <q-route-tab name="getaddress" icon="qr_code_2" to= "/address" label="Addr" />
-          <q-route-tab name="info" icon="info" to="/info" label="Info" />
-          <q-route-tab name="swap" icon="img:simpleswap_logo.svg" to="/swap" label="Swap" />
-          <q-tab v-if="devSite" name="DEVELOPMENT" label="DEVELOPMENT ONLY DO NOT USE"></q-tab>
-        </q-tabs>
         <q-toolbar-title>
           Quasar App
         </q-toolbar-title>
