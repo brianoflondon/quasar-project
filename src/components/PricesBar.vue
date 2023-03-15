@@ -1,14 +1,22 @@
 <template>
   <div class="text-center">
     Bitcoin: ${{ bitcoin }} Hive: ${{ hive }} Hive Dollars: ${{ hbd }}
-    <q-btn flat dense @click="$q.dark.toggle()" :color="$q.dark.isActive ? 'black' : 'white'" :title="$q.dark.isActive ? 'Change to light mode':'Change to dark mode'" :icon="$q.dark.isActive ? 'dark_mode':'light_mode'" size="sm" />
-
+    <q-btn
+      flat
+      dense
+      @click="$q.dark.toggle()"
+      :color="$q.dark.isActive ? 'black' : 'white'"
+      :title="$q.dark.isActive ? 'Change to light mode' : 'Change to dark mode'"
+      :icon="$q.dark.isActive ? 'dark_mode' : 'light_mode'"
+      size="sm"
+    />
   </div>
 </template>
 
 <script setup>
 import { defineComponent, ref } from 'vue'
 import { useQuasar } from 'quasar'
+import { api } from 'boot/axios'
 
 defineComponent({
   name: 'PricesBar',
@@ -21,6 +29,7 @@ const bitcoin = ref('💰💰💰')
 const hive = ref('💰💰')
 const hbd = ref('💰💰')
 const prices = ref('loading')
+// const api = axios.create({ baseURL: 'https://api.v4v.app/v1/' })
 
 function tidyNumber(x) {
   if (x) {
@@ -34,8 +43,8 @@ function tidyNumber(x) {
 
 async function fetchPrices() {
   try {
-    let res = await fetch(
-      `https://api.v4v.app/v1/cryptoprices/?use_cache=false`
+    const res = await fetch(
+      `https://api.v4v.app/v1/cryptoprices/?use_cache=true`
     )
     prices.value = await res.json()
     bitcoin.value = tidyNumber(prices.value.bitcoin.usd.toFixed(0))
@@ -46,6 +55,7 @@ async function fetchPrices() {
       hive: hive.value,
       hbd: hbd.value,
     }
+    const res2 = await api.get('/cryptoprices/')
   } catch (err) {
     console.error(err)
   }
