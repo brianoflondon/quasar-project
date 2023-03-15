@@ -1,6 +1,7 @@
 <template>
   <div class="text-center">
-    Bitcoin: ${{ bitcoin }} Hive: ${{ hive }} Hive Dollars: ${{ hbd }}
+    Bitcoin ${{ bitcoin }} Hive ${{ hive }} HBD ${{ hbd }} ▪️
+    {{ statusDisp }}
     <q-btn
       flat
       dense
@@ -15,20 +16,32 @@
 
 <script setup>
 import { defineComponent, ref } from 'vue'
-import { useQuasar } from 'quasar'
 import { api } from 'boot/axios'
+import { getSomething, getAPI } from 'src/components/getSomething.js'
+import { useQuasar } from 'quasar'
+
+const $q = useQuasar()
+$q.dark.set('auto')
+console.log('Getting something')
+console.log(getSomething())
 
 defineComponent({
   name: 'PricesBar',
 })
-const $q = useQuasar()
-$q.dark.set('auto')
 const emit = defineEmits(['response'])
 // const prices = ref('Loading')
 const bitcoin = ref('💰💰💰')
 const hive = ref('💰💰')
 const hbd = ref('💰💰')
 const prices = ref('loading')
+
+// async function getapiStatus() {
+//   const { apiStatus, apiError, statusDisp } = await getAPI()
+//   console.log('api status fetched')
+// }
+const { apiStatus, apiError, statusDisp } = getAPI()
+
+// getapiStatus()
 // const api = axios.create({ baseURL: 'https://api.v4v.app/v1/' })
 
 function tidyNumber(x) {
@@ -43,10 +56,9 @@ function tidyNumber(x) {
 
 async function fetchPrices() {
   try {
-    const res = await fetch(
-      `https://api.v4v.app/v1/cryptoprices/?use_cache=true`
-    )
-    prices.value = await res.json()
+    const res = await api.get('/cryptoprices/')
+    prices.value = res.data
+    console.log(prices.value)
     bitcoin.value = tidyNumber(prices.value.bitcoin.usd.toFixed(0))
     hive.value = tidyNumber(prices.value.hive.usd.toFixed(2))
     hbd.value = tidyNumber(prices.value.hive_dollar.usd.toFixed(2))
@@ -55,7 +67,6 @@ async function fetchPrices() {
       hive: hive.value,
       hbd: hbd.value,
     }
-    const res2 = await api.get('/cryptoprices/')
   } catch (err) {
     console.error(err)
   }
