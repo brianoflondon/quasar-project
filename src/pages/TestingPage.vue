@@ -8,17 +8,16 @@
         <div class="text-h6">{{ boxTitle }}</div>
         <div class="text-subtitle2">from v4v.app</div>
         Host: {{ host }} <br />
-        {{ apiStatus }}
       </q-card-section>
-      <q-card-section v-if="childApiStatus">
+      <q-card-section v-if="apiStatus">
         <p>commented out</p>
-        {{ childApiStatus.crypto.bitcoin }}<br />
-        <!--{{ childApiStatus.crypto.fmt.bitcoin }}<br />
-        {{ childApiStatus.crypto.fmt.hive }}<br /> -->
+        {{ apiStatus.crypto.bitcoin }}<br />
+        {{ apiStatus.crypto.fmt.bitcoin }}<br />
+        {{ apiStatus.crypto.fmt.hive }}<br />
       </q-card-section>
     </q-card>
     <q-footer>
-      <PricesBar @response="(apiStatus) => (childApiStatus = apiStatus)" />
+      <PricesBar @response="(childApiStatus) => (apiStatus = childApiStatus)" />
     </q-footer>
   </q-page>
 </template>
@@ -31,6 +30,6 @@ defineComponent({
   name: 'TestingPage',
 })
 const boxTitle = ref('Prices')
-const childApiStatus = ref(null)
+const apiStatus = ref(null)
 const host = ref(window.location.hostname)
 </script>
