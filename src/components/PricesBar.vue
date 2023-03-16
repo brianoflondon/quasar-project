@@ -25,10 +25,10 @@ $q.dark.set('auto')
 defineComponent({
   name: 'PricesBar',
 })
-const emit = defineEmits(['response'])
-// const prices = ref('Loading')
 
+const emit = defineEmits(['response'])
 const { apiStatus, apiError, statusDisp } = getAPIStatus()
+emit('response', apiStatus)
 
 // const bitcoin = ref('💰💰💰')
 const bitcoin = computed(() => {
@@ -44,7 +44,6 @@ const prices = computed(() => {
   return apiStatus.value ? apiStatus.value.crypto : 'fetching prices'
 })
 
-emit('response', apiStatus)
 </script>
 
 <style>

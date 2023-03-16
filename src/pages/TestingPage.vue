@@ -7,28 +7,30 @@
       <q-card-section>
         <div class="text-h6">{{ boxTitle }}</div>
         <div class="text-subtitle2">from v4v.app</div>
-        Host: {{ host }}
+        Host: {{ host }} <br />
+        {{ apiStatus }}
       </q-card-section>
-      <q-card-section v-if="apiStatus">
-        {{ apiStatus.crypto.bitcoin }}<br />
-        {{ apiStatus.crypto.fmt.bitcoin }}<br />
-        {{ apiStatus.crypto.fmt.hive }}<br />
+      <q-card-section v-if="childApiStatus">
+        <p>commented out</p>
+        {{ childApiStatus.crypto.bitcoin }}<br />
+        <!--{{ childApiStatus.crypto.fmt.bitcoin }}<br />
+        {{ childApiStatus.crypto.fmt.hive }}<br /> -->
       </q-card-section>
     </q-card>
     <q-footer>
-      <PricesBar @response="(apiStatusC) => (apiStatus = apiStatusC)" />
+      <PricesBar @response="(apiStatus) => (childApiStatus = apiStatus)" />
     </q-footer>
   </q-page>
 </template>
 
 <script setup>
-import { defineComponent, computed, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import PricesBar from 'src/components/PricesBar.vue'
 
 defineComponent({
   name: 'TestingPage',
 })
 const boxTitle = ref('Prices')
-const apiStatus = ref(null)
+const childApiStatus = ref(null)
 const host = ref(window.location.hostname)
 </script>

@@ -21,12 +21,13 @@ export function getAPIStatus() {
   const apiError = ref(null)
   const statusDisp = ref('⚡️')
 
-  console.log('api status fetching')
   const onDownload = async () => {
+    console.log('api status fetching from '+ api.defaults.baseURL)
     try {
       const res = await api.get('', {
         params: { get_crypto: true },
       })
+      console.log(res.data)
       apiStatus.value = res.data
       if (apiStatus.value.message != 'alive') {
         throw new Error('Server is not alive')
