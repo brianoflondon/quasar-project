@@ -45,40 +45,63 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
 
 const stringOptions = ['Google', 'Facebook', 'Twitter', 'Apple', 'Oracle']
+const options = ref(stringOptions)
+const model = ref(null)
 
-export default {
-  setup() {
-    const options = ref(stringOptions)
+function filterFn(val, update, abort) {
+  // call abort() at any time if you can't retrieve data somehow
 
-    return {
-      model: ref(null),
-      options,
-
-      filterFn(val, update, abort) {
-        // call abort() at any time if you can't retrieve data somehow
-
-        setTimeout(() => {
-          update(() => {
-            if (val === '') {
-              options.value = stringOptions
-            } else {
-              const needle = val.toLowerCase()
-              options.value = stringOptions.filter(
-                (v) => v.toLowerCase().indexOf(needle) > -1
-              )
-            }
-          })
-        }, 1500)
-      },
-
-      abortFilterFn() {
-        // console.log('delayed filter aborted')
-      },
-    }
-  },
+  setTimeout(() => {
+    update(() => {
+      if (val === '') {
+        options.value = stringOptions
+      } else {
+        const needle = val.toLowerCase()
+        options.value = stringOptions.filter(
+          (v) => v.toLowerCase().indexOf(needle) > -1
+        )
+      }
+    })
+  }, 100)
 }
+
+function abortFilterFn() {
+  console.log('delayed filter aborted')
+}
+
+// export default {
+//   setup() {
+//     const options = ref(stringOptions)
+
+//     return {
+//       model: ref(null),
+//       options,
+
+//       filterFn(val, update, abort) {
+//         // call abort() at any time if you can't retrieve data somehow
+
+//         setTimeout(() => {
+//           update(() => {
+//             if (val === '') {
+//               options.value = stringOptions
+//             } else {
+//               const needle = val.toLowerCase()
+//               options.value = stringOptions.filter(
+//                 (v) => v.toLowerCase().indexOf(needle) > -1
+//               )
+//             }
+//           })
+//         }, 100)
+//       },
+
+//       abortFilterFn() {
+//         // console.log('delayed filter aborted')
+//       },
+//     }
+//   },
+// }
 </script>
