@@ -9,6 +9,9 @@
         <div class="text-subtitle2">from v4v.app</div>
         Host: {{ host }} <br />
       </q-card-section>
+      <q-card-section>
+        <div>{{ appName }} v{{ appVersion }}</div>
+      </q-card-section>
       <q-card-section v-if="apiStatus">
         <p>commented out</p>
         {{ apiStatus.crypto.bitcoin }}<br />
@@ -16,6 +19,13 @@
         {{ apiStatus.crypto.fmt.hive }}<br />
       </q-card-section>
     </q-card>
+    <q-card
+      class="my-card text-white q-ma-lg"
+      style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
+    >
+      <HiveUserSelect />
+    </q-card>
+
     <q-footer>
       <PricesBar @response="(childApiStatus) => (apiStatus = childApiStatus)" />
     </q-footer>
@@ -24,12 +34,23 @@
 
 <script setup>
 import { defineComponent, ref } from 'vue'
+// import { name, version } from '../../package.json'
+import { getAppDetails } from 'src/components/getAppDetails.js'
 import PricesBar from 'src/components/PricesBar.vue'
+import HiveUserSelect from 'src/components/HiveUserSelect.vue'
 
 defineComponent({
   name: 'TestingPage',
 })
+const { appName, appVersion } = getAppDetails()
+
 const boxTitle = ref('Prices')
 const apiStatus = ref(null)
 const host = ref(window.location.hostname)
+
+const accName = ref('')
+
+console.log(accName)
+
+
 </script>
