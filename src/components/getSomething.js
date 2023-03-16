@@ -18,8 +18,13 @@ export function getAPI() {
   console.log('api status fetching')
   const onDownload = async () => {
     try {
-      const res = await api.get('')
+      const res = await api.get('', {
+        params: { get_crypto: true },
+      })
       apiStatus.value = res.data
+      if (apiStatus.value.message != 'alive') {
+        throw new Error('Server is not alive')
+      }
       statusDisp.value = '🟢'
       console.log(statusDisp.value)
     } catch (err) {

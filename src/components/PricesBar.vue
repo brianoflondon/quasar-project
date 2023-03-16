@@ -1,6 +1,7 @@
 <template>
   <div class="text-center">
-    Bitcoin ${{ bitcoin }} Hive ${{ hive }} HBD ${{ hbd }} ▪️
+    Bitcoin <b>${{ bitcoin }}</b> ▪️ Hive <b>${{ hive }}</b> ▪️ HBD
+    <b>${{ hbd }}</b> ▪️
     {{ statusDisp }}
     <q-btn
       flat
@@ -35,14 +36,12 @@ const hive = ref('💰💰')
 const hbd = ref('💰💰')
 const prices = ref('loading')
 
-// async function getapiStatus() {
-//   const { apiStatus, apiError, statusDisp } = await getAPI()
-//   console.log('api status fetched')
-// }
 const { apiStatus, apiError, statusDisp } = getAPI()
 
-// getapiStatus()
-// const api = axios.create({ baseURL: 'https://api.v4v.app/v1/' })
+// setInterval(() => {
+//   // const { apiStatus, apiError, statusDisp } = getAPI()
+//   console.log('hello')
+// }, 30000)
 
 function tidyNumber(x) {
   if (x) {
@@ -56,8 +55,10 @@ function tidyNumber(x) {
 
 async function fetchPrices() {
   try {
-    const res = await api.get('/cryptoprices/')
-    prices.value = res.data
+    const res = await api.get('', {
+      params: { get_crypto: true },
+    })
+    prices.value = res.data.crypto
     console.log(prices.value)
     bitcoin.value = tidyNumber(prices.value.bitcoin.usd.toFixed(0))
     hive.value = tidyNumber(prices.value.hive.usd.toFixed(2))

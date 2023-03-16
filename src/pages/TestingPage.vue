@@ -9,9 +9,10 @@
         <div class="text-subtitle2">from v4v.app</div>
       </q-card-section>
       <q-card-section v-if="prices.bitcoin">
-        {{ prices.bitcoin }}
-        {{ prices.fmt.bitcoin }}
-        {{ prices.fmt.hive }}
+        {{ prices.bitcoin }}<br>
+        {{ prices.fmt.bitcoin }}<br>
+        {{ prices.fmt.hive }}<br>
+        Host: {{ host }}
       </q-card-section>
     </q-card>
     <q-footer>
@@ -29,4 +30,7 @@ defineComponent({
 })
 const boxTitle = ref('Prices')
 const prices = ref('Loading')
+const host = ref('')
+host.value = window.location.hostname
+
 </script>

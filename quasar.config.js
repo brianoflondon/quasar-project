@@ -51,6 +51,9 @@ module.exports = configure(function (/* ctx */) {
       target: {
         browser: ['es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1'],
         node: 'node16',
+        // this is a configuration passed on
+        // to the underlying Webpack
+        devtool: 'source-map',
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
@@ -85,9 +88,7 @@ module.exports = configure(function (/* ctx */) {
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      config: {
-        
-      },
+      config: {},
 
       // iconSet: 'material-icons', // Quasar icon set
       // lang: 'en-US', // Quasar language pack
