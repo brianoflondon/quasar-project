@@ -12,6 +12,7 @@
         {{ prices.bitcoin }}<br>
         {{ prices.fmt.bitcoin }}<br>
         {{ prices.fmt.hive }}<br>
+        {{ prices }}
         Host: {{ host }}
       </q-card-section>
     </q-card>
