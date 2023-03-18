@@ -36,6 +36,8 @@
 
 <script>
 import { defineComponent, ref } from 'vue'
+import { getAppDetails } from 'src/components/getAppDetails.js'
+
 import EssentialLink from 'components/EssentialLink.vue'
 
 
@@ -99,13 +101,15 @@ export default defineComponent({
 
   setup() {
     const leftDrawerOpen = ref(false)
-
+    const { appName, appVersion } = getAppDetails()
     return {
       essentialLinks: linksList,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
+      appName,
+      appVersion
     }
   },
 })
