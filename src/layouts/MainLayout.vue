@@ -11,7 +11,9 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title> {{ appName }} v{{ appVersion }} </q-toolbar-title>
-        <LogoTest :size="50" class="q-pa-sm absolute-center" />
+        <div class="on-left">
+          <LogoTest :size="50" class="q-pa-sm" />
+        </div>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
