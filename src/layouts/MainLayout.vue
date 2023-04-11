@@ -11,7 +11,7 @@
           @click="toggleLeftDrawer"
         />
         <q-toolbar-title> {{ appName }} v{{ appVersion }} </q-toolbar-title>
-
+        <LogoTest :size="50" class="q-pa-sm absolute-center" />
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
@@ -34,12 +34,15 @@
   </q-layout>
 </template>
 
-<script>
-import { defineComponent, ref } from 'vue'
+<script setup>
+import { defineComponent, ref, computed } from 'vue'
 import { getAppDetails } from 'src/components/getAppDetails.js'
-
+import LogoTest from 'components/LogoTest.vue'
 import EssentialLink from 'components/EssentialLink.vue'
 
+defineComponent({
+  name: 'MainLayout',
+})
 
 const linksList = [
   {
@@ -91,12 +94,24 @@ const linksList = [
     link: 'https://awesome.quasar.dev',
   },
 ]
+const leftDrawerOpen = ref(false)
+const { appName, appVersion } = getAppDetails()
+const essentialLinks = ref(linksList)
+
+function toggleLeftDrawer() {
+  leftDrawerOpen.value = !leftDrawerOpen.value
+}
+</script>
+
+<!-- <script>
+
 
 export default defineComponent({
   name: 'MainLayout',
 
   components: {
     EssentialLink,
+    LogoTest,
   },
 
   setup() {
@@ -109,8 +124,8 @@ export default defineComponent({
         leftDrawerOpen.value = !leftDrawerOpen.value
       },
       appName,
-      appVersion
+      appVersion,
     }
   },
 })
-</script>
+</script> -->

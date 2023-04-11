@@ -3,11 +3,13 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
+// const URL = 'http://0.0.0.0:1818/v1'
+const URL = 'https://api.v4v.app/v1'
 let api = ''
 // api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
 if (window.location.hostname === 'localhost') {
-  console.log('Base URL set: http://0.0.0.0:1818/v1')
-  api = axios.create({ baseURL: 'http://0.0.0.0:1818/v1' })
+  console.log('Base URL set: ' + URL)
+  api = axios.create({ baseURL: URL })
 } else {
   console.log('Base URL set: https://api.v4v.app/v1')
   api = axios.create({ baseURL: 'https://api.v4v.app/v1' })

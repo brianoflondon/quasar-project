@@ -1,6 +1,10 @@
 <template>
   <q-page class="flex flex-center">
     <q-card>
+      <LogoTest :size="300" />
+      <LogoTest :size="100" />
+    </q-card>
+    <q-card>
       <QuasarLazyLoad />
     </q-card>
     <q-card
@@ -43,6 +47,7 @@ import { getAppDetails } from 'src/components/getAppDetails.js'
 import PricesBar from 'src/components/PricesBar.vue'
 import HiveUserSelect from 'src/components/HiveUserSelect.vue'
 import QuasarLazyLoad from 'src/components/QuasarLazyLoad.vue'
+import LogoTest from 'src/components/LogoTest.vue'
 
 defineComponent({
   name: 'TestingPage',
