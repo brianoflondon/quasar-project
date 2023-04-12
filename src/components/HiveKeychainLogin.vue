@@ -18,7 +18,7 @@
 
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
-import { onBeforeMount, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 console.log('Loading HiveKeychainLogin')
 const keySelected = ref('Posting')
 const keyOptions = ref(['Posting', 'Active', 'Owner', 'Memo', 'Other'])
@@ -40,8 +40,8 @@ const keychainParams = ref({
   options: {},
 })
 
-onBeforeMount(async () => {
-  await checkKeychain()
+onMounted(async () => {
+  await checkKC()
 })
 
 // watch for changes in the formParamsAsObject
@@ -52,10 +52,10 @@ watch(
   }
 )
 
-async function checkKeychain() {
+async function checkKC() {
   try {
     isKeychainInstalled.value = await keychain.isKeychainInstalled()
-    console.log(isKeychainInstalled.value)
+    console.log('keychainlogin' + isKeychainInstalled.value)
     if (!isKeychainInstalled.value) {
       keychainError.value = 'Keychain is not installed'
     }

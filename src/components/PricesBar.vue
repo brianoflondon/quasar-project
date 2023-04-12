@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { defineComponent, ref, computed, onBeforeMount } from 'vue'
+import { defineComponent, ref, computed, onMounted } from 'vue'
 import { getAPIStatus } from 'src/components/getPrices.js'
 import { useQuasar } from 'quasar'
 import { KeychainSDK } from 'keychain-sdk'
@@ -51,7 +51,7 @@ Check Keychain
 const keychain = new KeychainSDK(window)
 const isKeychainIn = ref(false)
 
-onBeforeMount(async () => {
+onMounted(async () => {
   await checkKeychain()
 })
 
