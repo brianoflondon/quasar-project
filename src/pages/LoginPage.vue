@@ -1,6 +1,7 @@
 <template>
   <q-page>
     <div class="q-pa-lg">
+      <div>Keychain: {{ isKeychainInstalled }}</div>
       <div v-if="isLoggedIn">
         ✅ Logged In as {{ keychainParams.data.username }} with
         {{ keySelected }} Key
@@ -19,13 +20,14 @@
 
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
-import { ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 const keySelected = ref('Posting')
 const keyOptions = ref(['Posting', 'Active', 'Owner', 'Memo', 'Other'])
 const keychain = new KeychainSDK(window)
 const timestamp = new Date().getTime()
 const isLoggedIn = ref(false)
 const keychainError = ref(null)
+const isKeychainInstalled = ref(false)
 
 const message = `{"login":login-to-my-site-at-${timestamp}}`
 console.log(keychain)
@@ -39,6 +41,10 @@ const keychainParams = ref({
   options: {},
 })
 
+onBeforeMount(async () => {
+  await checkKeychain()
+})
+
 // watch for changes in the formParamsAsObject
 watch(
   () => keychainParams.value.data.username,
@@ -47,12 +53,23 @@ watch(
   }
 )
 
-async function login() {
+async function checkKeychain() {
   try {
-    const isKeychainInstalled = await keychain.isKeychainInstalled()
-    console.log(isKeychainInstalled)
+    isKeychainInstalled.value = await keychain.isKeychainInstalled()
+    console.log(isKeychainInstalled.value)
+    if (!isKeychainInstalled.value) {
+      keychainError.value = 'Keychain is not installed'
+    }
   } catch (error) {
+    keychainError.value = 'Keychain is not installed'
     console.log({ error })
+  }
+}
+
+async function login() {
+  if (!isKeychainInstalled.value) {
+    keychainError.value = 'Keychain is not installed'
+    return
   }
   try {
     const login = await keychain.login(
