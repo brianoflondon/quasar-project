@@ -67,10 +67,6 @@ async function checkKeychain() {
 }
 
 async function login() {
-  if (!isKeychainInstalled.value) {
-    keychainError.value = 'Keychain is not installed'
-    return
-  }
   try {
     const login = await keychain.login(
       keychainParams.value.data,
