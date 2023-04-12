@@ -17,7 +17,7 @@
 
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 console.log('Loading HiveKeychainLogin')
 const keySelected = ref('Posting')
 const keyOptions = ref(['Posting', 'Active', 'Owner', 'Memo', 'Other'])
@@ -69,4 +69,24 @@ async function login() {
     keychainError.value = error
   }
 }
+
+/*
+Keyboard
+*/
+
+const handleKeyboard = (event) => {
+  if (event.key === 'Enter') {
+    login()
+  }
+}
+
+onMounted(() => {
+  console.log('Mounted')
+  document.addEventListener('keydown', handleKeyboard)
+})
+
+onUnmounted(() => {
+  console.log('Unmounted')
+  document.removeEventListener('keydown', handleKeyboard)
+})
 </script>
