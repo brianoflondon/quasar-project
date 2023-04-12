@@ -48,6 +48,7 @@ onMounted(async () => {
 watch(
   () => keychainParams.value.data.username,
   (username) => {
+    keychainParams.value.data.username = username.toLowerCase()
     isLoggedIn.value = false
   }
 )
