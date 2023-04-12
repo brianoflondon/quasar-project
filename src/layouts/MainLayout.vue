@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { defineComponent, ref, computed } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { getAppDetails } from 'src/components/getAppDetails.js'
 import LogoTest from 'components/LogoTest.vue'
 import EssentialLink from 'components/EssentialLink.vue'
@@ -47,6 +47,18 @@ defineComponent({
 })
 
 const linksList = [
+  {
+    title: 'Testing',
+    caption: 'Testing',
+    icon: 'school',
+    link: 'testing'
+  },
+  {
+    title: 'Testing Images',
+    caption: 'Testing Images',
+    icon: 'school',
+    link: 'images'
+  },
   {
     title: 'V4V.app',
     caption: 'V4V.app',

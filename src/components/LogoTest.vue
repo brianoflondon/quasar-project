@@ -15,6 +15,10 @@ const props = defineProps({
     type: Number,
     required: true,
   },
+  shadow: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const imageUrl = computed(() => {
