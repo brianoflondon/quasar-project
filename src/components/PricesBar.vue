@@ -1,7 +1,16 @@
 <template>
   <div class="text-center">
     Bitcoin <b>${{ bitcoin }}</b> ▪️ Hive <b>${{ hive }}</b> ▪️ HBD
-    <b>${{ hbd }}</b> ▪️ {{ statusDisp }} ▪️ {{ isKeychainIn }}
+    <b>${{ hbd }}</b> ▪️ {{ statusDisp }}
+    <span v-if="isKeychainIn">
+      ▪️
+      <img
+        src="/keychain/hive-keychain-keys.svg"
+        width="15"
+        height="15"
+      />
+    </span>
+    ▪️
     <q-btn
       flat
       dense

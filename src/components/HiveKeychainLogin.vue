@@ -1,6 +1,5 @@
 <template>
   <div class="q-pa-lg">
-    <div>Keychain: {{ isKeychainInstalled }}</div>
     <div v-if="isLoggedIn">
       ✅ Logged In as {{ keychainParams.data.username }} with
       {{ keySelected }} Key
@@ -26,22 +25,17 @@ const keychain = new KeychainSDK(window)
 const timestamp = new Date().getTime()
 const isLoggedIn = ref(false)
 const keychainError = ref(null)
-const isKeychainInstalled = ref(false)
 
 const message = `{"login":login-to-my-site-at-${timestamp}}`
 console.log(keychain)
 const keychainParams = ref({
   data: {
-    username: 'hivehydra',
+    username: '',
     message: message,
     method: keySelected,
     title: 'Login',
   },
   options: {},
-})
-
-onMounted(async () => {
-  await checkKC()
 })
 
 // watch for changes in the formParamsAsObject
@@ -53,18 +47,12 @@ watch(
   }
 )
 
-async function checkKC() {
-  try {
-    isKeychainInstalled.value = await keychain.isKeychainInstalled()
-    console.log('keychainlogin' + isKeychainInstalled.value)
-    if (!isKeychainInstalled.value) {
-      keychainError.value = 'Keychain is not installed'
-    }
-  } catch (error) {
-    keychainError.value = 'Keychain is not installed'
-    console.log({ error })
+watch(
+  () => keychainParams.value.data.method,
+  () => {
+    isLoggedIn.value = false
   }
-}
+)
 
 async function login() {
   try {
