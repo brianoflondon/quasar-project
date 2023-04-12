@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
     Bitcoin <b>${{ bitcoin }}</b> ▪️ Hive <b>${{ hive }}</b> ▪️ HBD
-    <b>${{ hbd }}</b> ▪️ {{ statusDisp }}
+    <b>${{ hbd }}</b> ▪️ {{ statusDisp }} ▪️ {{ isKeychainIn }}
     <q-btn
       flat
       dense
@@ -15,9 +15,10 @@
 </template>
 
 <script setup>
-import { defineComponent, computed } from 'vue'
+import { defineComponent, ref, computed, onBeforeMount } from 'vue'
 import { getAPIStatus } from 'src/components/getPrices.js'
 import { useQuasar } from 'quasar'
+import { KeychainSDK } from 'keychain-sdk'
 
 const $q = useQuasar()
 $q.dark.set('auto')
@@ -44,6 +45,28 @@ const prices = computed(() => {
   return apiStatus.value ? apiStatus.value.crypto : 'fetching prices'
 })
 
+/*
+Check Keychain
+*/
+const keychain = new KeychainSDK(window)
+const isKeychainIn = ref(false)
+
+onBeforeMount(async () => {
+  await checkKeychain()
+})
+
+async function checkKeychain() {
+  try {
+    isKeychainIn.value = await keychain.isKeychainInstalled()
+    console.log(isKeychainIn.value)
+    if (!isKeychainIn.value) {
+      keychainError.value = 'Keychain is not installed'
+    }
+  } catch (error) {
+    keychainError.value = 'Keychain is not installed'
+    console.log({ error })
+  }
+}
 </script>
 
 <style>

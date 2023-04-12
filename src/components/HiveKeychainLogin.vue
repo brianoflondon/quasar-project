@@ -19,6 +19,7 @@
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
 import { onBeforeMount, ref, watch } from 'vue'
+console.log('Loading HiveKeychainLogin')
 const keySelected = ref('Posting')
 const keyOptions = ref(['Posting', 'Active', 'Owner', 'Memo', 'Other'])
 const keychain = new KeychainSDK(window)
