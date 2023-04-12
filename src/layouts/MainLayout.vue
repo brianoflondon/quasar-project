@@ -48,16 +48,22 @@ defineComponent({
 
 const linksList = [
   {
+    title: 'Testing Login',
+    caption: 'Testing Login',
+    icon: 'school',
+    link: '/#/login'
+  },
+  {
     title: 'Testing',
     caption: 'Testing',
     icon: 'school',
-    link: 'testing'
+    link: '/#/testing'
   },
   {
     title: 'Testing Images',
     caption: 'Testing Images',
     icon: 'school',
-    link: 'images'
+    link: '/#/images'
   },
   {
     title: 'V4V.app',
