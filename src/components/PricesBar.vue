@@ -1,7 +1,7 @@
 <template>
   <div class="text-center">
-    Bitcoin <b>${{ bitcoin }}</b> ▪️ Hive <b>${{ hive }}</b> ▪️ HBD
-    <b>${{ hbd }}</b> ▪️ {{ statusDisp }}
+    Bitcoin <b>${{ storeAPIStatus.bitcoin }}</b> ▪️ Hive <b>${{ storeAPIStatus.hive }}</b> ▪️ HBD
+    <b>${{ storeAPIStatus.hbd }}</b> ▪️ {{ storeAPIStatus.statusDisp }}
     <span v-if="isKeychainIn">
       ▪️
       <img src="/keychain/hive-keychain-keys.svg" width="15" height="15" />
@@ -16,11 +16,7 @@
       :icon="$q.dark.isActive ? 'dark_mode' : 'light_mode'"
       size="sm"
     />
-    <q-btn
-      icon="replay"
-      flat
-      dense
-      @click="storeAPIStatus.update()" />
+    <q-btn icon="replay" flat dense @click="storeAPIStatus.update()" />
   </div>
 </template>
 

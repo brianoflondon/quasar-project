@@ -23,6 +23,15 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
     prices: (state) => {
       return state.apiStatus ? state.apiStatus.crypto : 'fetching prices'
     },
+    /**
+     * Returns the count value times two plus one.
+     *
+     * @returns {string}
+     */
+    textBar() {
+      // autocompletion ✨
+      return `Bitcoin <b>${this.bitcoin}</b> ▪️ Hive <b>${this.hive}</b> ▪️ HBD<b>${this.hbd}</b> ▪️ ${this.statusDisp}`
+    },
   },
 
   actions: {
