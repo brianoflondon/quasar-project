@@ -18,7 +18,7 @@
       </q-card-section>
       <q-card-section v-if="appName">
         <div>{{ appName }} v{{ appVersion }}</div>
-        {{ bitcoin }}
+        <!-- {{ storeAPIStatus.bitcoin }} -->
       </q-card-section>
       <q-card-section v-if="storeAPIStatus.apiStatus">
         {{ storeAPIStatus.apiStatus.crypto.bitcoin }}<br />
@@ -49,6 +49,7 @@ import QuasarLazyLoad from 'src/components/QuasarLazyLoad.vue'
 import LogoTest from 'src/components/LogoTest.vue'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 const storeAPIStatus = useStoreAPIStatus()
+storeAPIStatus.update()
 
 defineComponent({
   name: 'TestingPage',
