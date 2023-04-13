@@ -21,7 +21,7 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
       return state.apiStatus ? state.apiStatus.crypto.fmt.hbd : '💰💰'
     },
     hiveSats: (state) => {
-      if (!state.apiStatus) return null
+      if (!state.apiStatus) return '💰💰💰'
       return tidyNumber(
         (state.apiStatus.crypto.hive.btc * 100000000).toFixed(0)
       )
