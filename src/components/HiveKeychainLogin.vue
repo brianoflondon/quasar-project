@@ -18,19 +18,23 @@
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
 import { onMounted, onUnmounted, ref, watch } from 'vue'
+import { useStoreUser } from 'src/stores/storeUser'
+
+const storeUser = useStoreUser()
+
 console.log('Loading HiveKeychainLogin')
 const keySelected = ref('Posting')
 const keyOptions = ref(['Posting', 'Active', 'Owner', 'Memo', 'Other'])
 const keychain = new KeychainSDK(window)
 const timestamp = new Date().getTime()
-const isLoggedIn = ref(false)
+const isLoggedIn = ref(storeUser.isLoggedIn)
 const keychainError = ref(null)
 
 const message = `{"login":login-to-my-site-at-${timestamp}}`
 console.log(keychain)
 const keychainParams = ref({
   data: {
-    username: '',
+    username: storeUser.hiveAccname,
     message: message,
     method: keySelected,
     title: 'Login',
@@ -43,6 +47,7 @@ watch(
   () => keychainParams.value.data.username,
   (username) => {
     keychainParams.value.data.username = username.toLowerCase().trim()
+    storeUser.isLoggedIn = false
     isLoggedIn.value = false
   }
 )
@@ -62,6 +67,8 @@ async function login() {
     )
     keychainError.value = ''
     console.log('✅ success' + { login })
+    storeUser.hiveAccname = keychainParams.value.data.username
+    storeUser.login(keychainParams.value.data.username, keySelected.value)
     isLoggedIn.value = true
   } catch (error) {
     console.log('❌ failure')
