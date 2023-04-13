@@ -20,11 +20,10 @@
         <div>{{ appName }} v{{ appVersion }}</div>
         {{ bitcoin }}
       </q-card-section>
-      <q-card-section v-if="apiStatus">
-        <p>commented out</p>
-        {{ apiStatus.crypto.bitcoin }}<br />
-        <!-- {{ apiStatus.crypto.fmt.bitcoin }}<br />
-        {{ apiStatus.crypto.fmt.hive }}<br /> -->
+      <q-card-section v-if="storeAPIStatus.apiStatus">
+        {{ storeAPIStatus.apiStatus.crypto.bitcoin }}<br />
+        {{ storeAPIStatus.apiStatus.crypto.fmt.bitcoin }}<br />
+        {{ storeAPIStatus.apiStatus.crypto.fmt.hive }}<br />
       </q-card-section>
     </q-card>
     <q-card
@@ -35,7 +34,7 @@
     </q-card>
 
     <q-footer>
-      <PricesBar @response="(childApiStatus) => (apiStatus = childApiStatus)" />
+      <PricesBar />
     </q-footer>
   </q-page>
 </template>
@@ -48,23 +47,15 @@ import PricesBar from 'src/components/PricesBar.vue'
 import HiveUserSelect from 'src/components/HiveUserSelect.vue'
 import QuasarLazyLoad from 'src/components/QuasarLazyLoad.vue'
 import LogoTest from 'src/components/LogoTest.vue'
+import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+const storeAPIStatus = useStoreAPIStatus()
 
 defineComponent({
   name: 'TestingPage',
 })
 const { appName, appVersion } = getAppDetails()
-const bitcoin = computed(() => {
-  if (apiStatus.value) {
-    return apiStatus?.value?.crypto?.fmt?.bitcoin
-      ? apiStatus.value.crypto.fmt.bitcoin
-      : '💰💰💰'
-  } else {
-    return apiStatus?.value?.crypto?.fmt?.bitcoin
-  }
-})
 
 const boxTitle = ref('Prices')
-const apiStatus = ref(null)
 const host = ref(window.location.hostname)
 
 const accName = ref('')

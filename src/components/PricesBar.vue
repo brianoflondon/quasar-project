@@ -1,7 +1,8 @@
 <template>
   <div class="text-center">
-    Bitcoin <b>${{ storeAPIStatus.bitcoin }}</b> ▪️ Hive <b>${{ storeAPIStatus.hive }}</b> ▪️ HBD
-    <b>${{ storeAPIStatus.hbd }}</b> ▪️ {{ storeAPIStatus.statusDisp }}
+    Bitcoin <b>${{ storeAPIStatus.bitcoin }}</b> ▪️ Hive
+    <b>${{ storeAPIStatus.hive }}</b> ▪️ HBD <b>${{ storeAPIStatus.hbd }}</b> ▪️
+    {{ storeAPIStatus.statusDisp }}
     <span v-if="isKeychainIn">
       ▪️
       <img src="/keychain/hive-keychain-keys.svg" width="15" height="15" />
@@ -22,7 +23,7 @@
 
 <script setup>
 import { defineComponent, ref, computed, onMounted } from 'vue'
-import { getAPIStatus } from 'src/components/getPrices.js'
+// import { getAPIStatus } from 'src/components/getPrices.js'
 import { useQuasar } from 'quasar'
 import { KeychainSDK } from 'keychain-sdk'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
@@ -38,24 +39,24 @@ defineComponent({
 })
 
 const emit = defineEmits(['response'])
-const { apiStatus, apiError, statusDisp } = getAPIStatus()
+// const { apiStatus, apiError, statusDisp } = getAPIStatus()
 console.log('storeAPIStatus before doing anything is ' + storeAPIStatus)
 
-emit('response', apiStatus)
+// emit('response', apiStatus)
 
-// const bitcoin = ref('💰💰💰')
-const bitcoin = computed(() => {
-  return apiStatus.value ? apiStatus.value.crypto.fmt.bitcoin : '💰💰💰'
-})
-const hive = computed(() => {
-  return apiStatus.value ? apiStatus.value.crypto.fmt.hive : '💰💰'
-})
-const hbd = computed(() => {
-  return apiStatus.value ? apiStatus.value.crypto.fmt.hbd : '💰💰'
-})
-const prices = computed(() => {
-  return apiStatus.value ? apiStatus.value.crypto : 'fetching prices'
-})
+// // const bitcoin = ref('💰💰💰')
+// const bitcoin = computed(() => {
+//   return apiStatus.value ? apiStatus.value.crypto.fmt.bitcoin : '💰💰💰'
+// })
+// const hive = computed(() => {
+//   return apiStatus.value ? apiStatus.value.crypto.fmt.hive : '💰💰'
+// })
+// const hbd = computed(() => {
+//   return apiStatus.value ? apiStatus.value.crypto.fmt.hbd : '💰💰'
+// })
+// const prices = computed(() => {
+//   return apiStatus.value ? apiStatus.value.crypto : 'fetching prices'
+// })
 
 /*
 Check Keychain
