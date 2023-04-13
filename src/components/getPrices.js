@@ -4,6 +4,9 @@
 
 import { ref } from 'vue'
 import { api } from 'boot/axios'
+import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+
+// const storeAPIStatus = useStoreAPIStatus()
 
 function tidyNumber(x) {
   if (x) {
@@ -34,11 +37,14 @@ export function getAPIStatus() {
       }
       statusDisp.value = '🟢'
       apiStatus.value.crypto = prettyPrices(apiStatus.value.crypto)
+      // storeAPIStatus.apiStatus = apiStatus.value
       console.log(statusDisp.value)
     } catch (err) {
       console.log(err.message)
       apiError.value = err
       statusDisp.value = '🟥'
+      // storeAPIStatus.apiStatus = null
+      // storeAPIStatus.apiError = err
       console.log(statusDisp.value)
     }
   }

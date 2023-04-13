@@ -4,11 +4,7 @@
     <b>${{ hbd }}</b> ▪️ {{ statusDisp }}
     <span v-if="isKeychainIn">
       ▪️
-      <img
-        src="/keychain/hive-keychain-keys.svg"
-        width="15"
-        height="15"
-      />
+      <img src="/keychain/hive-keychain-keys.svg" width="15" height="15" />
     </span>
     ▪️
     <q-btn
@@ -20,6 +16,11 @@
       :icon="$q.dark.isActive ? 'dark_mode' : 'light_mode'"
       size="sm"
     />
+    <q-btn
+      icon="replay"
+      flat
+      dense
+      @click="storeAPIStatus.update()" />
   </div>
 </template>
 
@@ -28,6 +29,10 @@ import { defineComponent, ref, computed, onMounted } from 'vue'
 import { getAPIStatus } from 'src/components/getPrices.js'
 import { useQuasar } from 'quasar'
 import { KeychainSDK } from 'keychain-sdk'
+import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+const storeAPIStatus = useStoreAPIStatus()
+storeAPIStatus.update()
+// console.log('storeAPIStatus before doing anything is ' + storeAPIStatus)
 
 const $q = useQuasar()
 $q.dark.set('auto')
@@ -38,6 +43,8 @@ defineComponent({
 
 const emit = defineEmits(['response'])
 const { apiStatus, apiError, statusDisp } = getAPIStatus()
+console.log('storeAPIStatus before doing anything is ' + storeAPIStatus)
+
 emit('response', apiStatus)
 
 // const bitcoin = ref('💰💰💰')

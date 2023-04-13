@@ -42,7 +42,7 @@ const keychainParams = ref({
 watch(
   () => keychainParams.value.data.username,
   (username) => {
-    keychainParams.value.data.username = username.toLowerCase()
+    keychainParams.value.data.username = username.toLowerCase().trim()
     isLoggedIn.value = false
   }
 )
