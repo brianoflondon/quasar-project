@@ -22,6 +22,7 @@ const props = defineProps({
 })
 
 const imageUrl = computed(() => {
+  return '/logo/v4vapp-v002-no-shadow-scales.svg'
   if (props.size <= 50) {
     return '/logo/v4vapp-v002-no-logos.svg'
   } else if (props.size <= 100) {

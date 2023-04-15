@@ -1,5 +1,8 @@
 import { defineStore } from 'pinia'
 import { api } from 'boot/axios'
+import { KeychainSDK } from 'keychain-sdk'
+
+const keychain = new KeychainSDK(window)
 
 export const useStoreAPIStatus = defineStore('storeAPIStatus', {
   state: () => ({
@@ -8,6 +11,7 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
     apiStatus: null,
     apiError: null,
     statusDisp: '⚡️',
+    isKeychainIn: false,
   }),
 
   getters: {
@@ -42,6 +46,7 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
 
   actions: {
     update() {
+      console.log('Updating API status')
       const onDownload = async () => {
         try {
           const res = await api.get('', {
@@ -66,7 +71,19 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
           this.statusDisp = '🟥'
         }
       }
+      const checkKeychain = async () => {
+        console.log('Checking keychain')
+        try {
+          this.isKeychainIn = await keychain.isKeychainInstalled()
+          if (!this.isKeychainIn) {
+            console.log('Keychain is not installed')
+          }
+        } catch (error) {
+          console.log({ error })
+        }
+      }
       onDownload()
+      checkKeychain()
     },
   },
 })

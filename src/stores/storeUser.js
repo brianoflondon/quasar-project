@@ -10,19 +10,20 @@ class HiveUser {
   }
 }
 
-
-
 export const useStoreUser = defineStore('storeUser', {
   state: () => ({
     isLoggedIn: false,
     hiveAccname: 'hivehydra',
     keySelected: '',
-    users: []
+    users: [],
   }),
 
   actions: {
     login(hiveAccname, keySelected) {
       const newUser = new HiveUser(hiveAccname, keySelected)
+      this.users = this.users.filter(
+        (obj) => obj.hiveAccname !== this.hiveAccname
+      )
       this.users.push(newUser)
       this.isLoggedIn = true
       this.hiveAccname = hiveAccname
@@ -39,6 +40,10 @@ export const useStoreUser = defineStore('storeUser', {
       }
     },
     logout() {
+      console.log('logout')
+      this.users = this.users.filter(
+        (obj) => obj.hiveAccname !== this.hiveAccname
+      )
       this.isLoggedIn = false
       this.hiveAccname = ''
       this.keySelected = ''

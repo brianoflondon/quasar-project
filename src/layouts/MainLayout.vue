@@ -14,6 +14,7 @@
         <div class="on-left">
           <LogoTest :size="50" class="q-pa-sm" />
         </div>
+        <div> ▪️ User: {{ storeUser.hiveAccname }} ▪️ </div>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
@@ -41,6 +42,9 @@ import { defineComponent, ref } from 'vue'
 import { getAppDetails } from 'src/components/getAppDetails.js'
 import LogoTest from 'components/LogoTest.vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { useStoreUser } from 'src/stores/storeUser'
+
+const storeUser = useStoreUser()
 
 defineComponent({
   name: 'MainLayout',
@@ -51,19 +55,19 @@ const linksList = [
     title: 'Testing Login',
     caption: 'Testing Login',
     icon: 'school',
-    link: '/#/login'
+    link: '/#/login',
   },
   {
     title: 'Testing',
     caption: 'Testing',
     icon: 'school',
-    link: '/#/testing'
+    link: '/#/testing',
   },
   {
     title: 'Testing Images',
     caption: 'Testing Images',
     icon: 'school',
-    link: '/#/images'
+    link: '/#/images',
   },
   {
     title: 'V4V.app',
