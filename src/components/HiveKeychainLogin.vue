@@ -91,7 +91,7 @@ watch(
       if (username !== '') {
         inputAvatar.value = await useLoadHiveAvatar(username)
       }
-    }, 500
+    }, 500)
   }
 )
 
