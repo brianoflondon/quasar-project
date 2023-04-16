@@ -6,7 +6,6 @@ const routes = [
       { path: '/images', component: () => import('pages/TestingImages.vue') },
       { path: '/testing', component: () => import('pages/TestingPage.vue') },
       { path: '/login', component: () => import('pages/LoginPage.vue') },
-      { path: '/calc', component: () => import('components/Calculator.vue') },
     ],
   },
 
