@@ -5,9 +5,33 @@
       {{ keySelected }} Key
     </div>
     <div v-if="!storeUser.isLoggedIn">▪️ Not Logged In</div>
-    <q-input v-model="keychainParams.data.username" />
-    <q-btn @click="login">Login</q-btn>
-    <q-btn @click="logout">Logout</q-btn>
+    <div class="row">
+      <div class="col q-pa-sm vertical-middle">
+        <q-input
+          outlined
+          v-model="keychainParams.data.username"
+          label="Hive Account"
+        >
+          <template v-slot:prepend>
+            <q-icon name="fa-brands fa-hive" color="orange" />
+          </template>
+          <template v-slot:append>
+            <img
+              :src="inputAvatar"
+              height="50"
+              width="50"
+              @error="handleImageError"
+            />
+          </template>
+        </q-input>
+      </div>
+      <div class="col-2 q-pa-sm vertical-middle">
+        <q-btn class="vertical-middle" rounded @click="login">Login</q-btn>
+      </div>
+      <div class="col-2 q-pa-sm vertical-middle">
+        <q-btn @click="logout">Logout</q-btn>
+      </div>
+    </div>
     <q-select v-model="keySelected" :options="keyOptions" label="Key" />
     <div v-if="keychainError">
       <div>❌ Error</div>
@@ -29,6 +53,7 @@ import { KeychainSDK } from 'keychain-sdk'
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+import { useLoadHiveAvatar } from 'src/use/useHiveAvatar'
 import { useQuasar } from 'quasar'
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
@@ -51,14 +76,28 @@ const keychainParams = ref({
   options: {},
 })
 
+const inputAvatar = ref('')
+
+let timeoutId = null
 // watch for changes in the keychainParams.value.data.username
 watch(
   () => keychainParams.value.data.username,
-  (username) => {
+  async (username) => {
     keychainParams.value.data.username = username.toLowerCase().trim()
     storeUser.isLoggedIn = false
+    // Timeout function used to stop excessive calls to missing avatars
+    clearTimeout(timeoutId)
+    timeoutId = setTimeout(async () => {
+      if (username !== '') {
+        inputAvatar.value = await useLoadHiveAvatar(username)
+      }
+    }, 500
   }
 )
+
+function handleImageError() {
+  inputAvatar.value = 'avatars/unkown_hive_user.png'
+}
 
 watch(
   () => keychainParams.value.data.method,
@@ -110,8 +149,11 @@ const handleKeyboard = (event) => {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   document.addEventListener('keydown', handleKeyboard)
+  inputAvatar.value = await useLoadHiveAvatar(
+    keychainParams.value.data.username
+  )
 })
 
 onUnmounted(() => {

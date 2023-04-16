@@ -18,7 +18,9 @@
           ▪️ {{ storeUser.hiveProfile.name }} @{{ storeUser.hiveAccname }} ▪️
         </div>
         <div v-if="storeUser.profileImageUrl" class="q-pa-sm">
-          <img :src="storeUser.profileImageUrl" width="50" height="50" />
+          <q-avatar square size="md">
+            <img :src="storeUser.profileImageUrl"/>
+          </q-avatar>
         </div>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
