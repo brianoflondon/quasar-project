@@ -23,7 +23,7 @@ export const useStoreUser = defineStore('storeUser', {
     profileImageUrl: (state) => {
       if (!state.hiveProfile) return null
       return `https://api.v4v.app/v1/hive/avatar/${state.hiveAccname}`
-    }
+    },
   },
 
   actions: {
@@ -41,7 +41,6 @@ export const useStoreUser = defineStore('storeUser', {
         SessionStorage.set('isLoggedIn', this.isLoggedIn)
         SessionStorage.set('hiveAccname', this.hiveAccname)
         SessionStorage.set('keySelected', this.keySelected)
-        console.log('session saved')
         this.getHiveProfile()
       } catch (err) {
         console.log(err)
@@ -67,9 +66,10 @@ export const useStoreUser = defineStore('storeUser', {
           const res = await hiveTx.call('condenser_api.get_accounts', [
             [this.hiveAccname],
           ])
-          const postingJsonMetadat = JSON.parse(res.result[0].posting_json_metadata)
+          const postingJsonMetadat = JSON.parse(
+            res.result[0].posting_json_metadata
+          )
           this.hiveProfile = postingJsonMetadat.profile
-          console.log(this.hiveProfile)
         } catch (err) {
           console.log(err)
         }

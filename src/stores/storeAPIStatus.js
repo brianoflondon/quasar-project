@@ -6,7 +6,7 @@ const keychain = new KeychainSDK(window)
 
 export const useStoreAPIStatus = defineStore('storeAPIStatus', {
   state: () => ({
-    count: 0,
+    // count: 0, // for testing
     fetchTimestamp: null,
     apiStatus: null,
     apiError: null,
@@ -34,8 +34,6 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
       return state.apiStatus ? state.apiStatus.crypto : 'fetching prices'
     },
     /**
-     * Returns the count value times two plus one.
-     *
      * @returns {string}
      */
     textBar() {
@@ -46,16 +44,15 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
 
   actions: {
     update() {
-      console.log('Updating API status')
       const onDownload = async () => {
         try {
           const res = await api.get('', {
             params: { get_crypto: true },
           })
-          this.count++
-          if (this.count % 3 === 0) {
-            throw new Error('Api failed')
-          }
+          // this.count++
+          // if (this.count % 3 === 0) {
+          //   throw new Error('Api failed')
+          // }
           this.fetchTimestamp = Date.now()
           this.apiStatus = res.data
           this.apiError = null
@@ -63,7 +60,6 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
           this.statusDisp = '🟢'
         } catch (err) {
           let age = (Date.now() - this.fetchTimestamp) / 1000
-          console.log('api call age', age)
           if (age > 5 && this.apiStatus) {
             this.apiStatus = null
           }
@@ -72,7 +68,6 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
         }
       }
       const checkKeychain = async () => {
-        console.log('Checking keychain')
         try {
           this.isKeychainIn = await keychain.isKeychainInstalled()
           if (!this.isKeychainIn) {

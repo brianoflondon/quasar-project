@@ -2,15 +2,16 @@
   <div class="text-center">
     Bitcoin <b>${{ storeAPIStatus.bitcoin }}</b> ▪️ Hive
     <b>${{ storeAPIStatus.hive }}/ṩ{{ storeAPIStatus.hiveSats }}</b> ▪️ HBD
-    <b>${{ storeAPIStatus.hbd }}</b> ▪️
-    {{ storeAPIStatus.statusDisp }}
+    <b>${{ storeAPIStatus.hbd }} ▪️ </b>
+    <q-btn flat dense :title="storeAPIStatus.apiError ? 'Failure' : 'Working'">
+      {{ storeAPIStatus.statusDisp }}
+    </q-btn>
     <span v-if="storeAPIStatus.isKeychainIn">
-      ▪️
-      <img src="/keychain/hive-keychain-keys.svg" width="15" height="15" />
+      <q-btn flat dense title="Keychain Installed">
+        <img src="/keychain/hive-keychain-keys.svg" width="15" height="15" />
+      </q-btn>
     </span>
-    ▪️
     <q-btn icon="replay" flat dense @click="storeAPIStatus.update()" />
-    ▪️
     <q-btn
       flat
       dense
@@ -24,7 +25,7 @@
 </template>
 
 <script setup>
-import { defineComponent, ref, computed, onMounted } from 'vue'
+import { defineComponent } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 const storeAPIStatus = useStoreAPIStatus()
@@ -37,10 +38,7 @@ defineComponent({
   name: 'PricesBar',
 })
 
-const emit = defineEmits(['response'])
-console.log('storeAPIStatus before doing anything is ' + storeAPIStatus)
-
-
+// const emit = defineEmits(['response'])
 </script>
 
 <style>

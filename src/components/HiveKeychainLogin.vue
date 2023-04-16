@@ -1,10 +1,10 @@
 <template>
   <div class="q-pa-lg">
-    <div v-if="isLoggedIn">
+    <div v-if="storeUser.isLoggedIn">
       ✅ Logged In as {{ keychainParams.data.username }} with
       {{ keySelected }} Key
     </div>
-    <div v-if="!isLoggedIn">▪️ Not Logged In</div>
+    <div v-if="!storeUser.isLoggedIn">▪️ Not Logged In</div>
     <q-input v-model="keychainParams.data.username" />
     <q-btn @click="login">Login</q-btn>
     <q-btn @click="logout">Logout</q-btn>
@@ -34,16 +34,13 @@ const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
 const storeUser = useStoreUser()
 
-console.log('Loading HiveKeychainLogin')
 const keySelected = ref('Posting')
 const keyOptions = ref(['Posting', 'Active', 'Owner', 'Memo', 'Other'])
 const keychain = new KeychainSDK(window)
 const timestamp = new Date().getTime()
-const isLoggedIn = ref(storeUser.isLoggedIn)
 const keychainError = ref(null)
 
 const message = `{"login":login-to-my-site-at-${timestamp}}`
-console.log(keychain)
 const keychainParams = ref({
   data: {
     username: storeUser.hiveAccname,
@@ -54,29 +51,24 @@ const keychainParams = ref({
   options: {},
 })
 
-// watch for changes in the formParamsAsObject
+// watch for changes in the keychainParams.value.data.username
 watch(
   () => keychainParams.value.data.username,
   (username) => {
     keychainParams.value.data.username = username.toLowerCase().trim()
     storeUser.isLoggedIn = false
-    isLoggedIn.value = false
   }
 )
 
 watch(
   () => keychainParams.value.data.method,
   () => {
-    isLoggedIn.value = false
+    storeUser.isLoggedIn = false
   }
 )
 
 async function login() {
   try {
-    console.log(
-      'checking keychain in hivekeychainlogin',
-      storeAPIStatus.isKeychainIn
-    )
     if (!storeAPIStatus.isKeychainIn) {
       $q.notify('Keychain is not installed')
       console.log('Keychain is not installed')
@@ -88,7 +80,7 @@ async function login() {
       keychainParams.value.options
     )
     keychainError.value = ''
-    console.log('✅ success' + { login })
+    console.log('✅ success')
     storeUser.hiveAccname = keychainParams.value.data.username
     storeUser.login(keychainParams.value.data.username, keySelected.value)
     isLoggedIn.value = true
@@ -105,7 +97,6 @@ async function logout() {
   storeUser.logout()
 }
 
-
 const userList = computed(() => {
   return storeUser.users
   // return storeUser.users.filter(obj => obj.hiveAccname === keychainParams.value.data.username)
@@ -121,12 +112,10 @@ const handleKeyboard = (event) => {
 }
 
 onMounted(() => {
-  console.log('Mounted')
   document.addEventListener('keydown', handleKeyboard)
 })
 
 onUnmounted(() => {
-  console.log('Unmounted')
   document.removeEventListener('keydown', handleKeyboard)
 })
 </script>
