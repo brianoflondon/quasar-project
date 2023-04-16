@@ -14,7 +14,12 @@
         <div class="on-left">
           <LogoTest :size="50" class="q-pa-sm" />
         </div>
-        <div> ▪️ User: {{ storeUser.hiveAccname }} ▪️ </div>
+        <div v-if="storeUser.hiveProfile">
+          ▪️ {{ storeUser.hiveProfile.name }} @{{ storeUser.hiveAccname }} ▪️
+        </div>
+        <div v-if="storeUser.profileImageUrl" class="q-pa-sm">
+          <img :src="storeUser.profileImageUrl" width="50" height="50" />
+        </div>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>

@@ -14,9 +14,17 @@ export const useStoreUser = defineStore('storeUser', {
   state: () => ({
     isLoggedIn: false,
     hiveAccname: 'hivehydra',
+    hiveProfile: null,
     keySelected: '',
     users: [],
   }),
+
+  getters: {
+    profileImageUrl: (state) => {
+      if (!state.hiveProfile) return null
+      return `https://api.v4v.app/v1/hive/avatar/${state.hiveAccname}`
+    }
+  },
 
   actions: {
     login(hiveAccname, keySelected) {
@@ -34,6 +42,7 @@ export const useStoreUser = defineStore('storeUser', {
         SessionStorage.set('hiveAccname', this.hiveAccname)
         SessionStorage.set('keySelected', this.keySelected)
         console.log('session saved')
+        this.getHiveProfile()
       } catch (err) {
         console.log(err)
         console.log('session save failed')
@@ -47,9 +56,25 @@ export const useStoreUser = defineStore('storeUser', {
       this.isLoggedIn = false
       this.hiveAccname = ''
       this.keySelected = ''
+      this.hiveProfile = null
       SessionStorage.set('isLoggedIn', this.isLoggedIn)
       SessionStorage.set('hiveAccname', this.hiveAccname)
       SessionStorage.set('keySelected', this.keySelected)
+    },
+    getHiveProfile() {
+      const getAccounts = async () => {
+        try {
+          const res = await hiveTx.call('condenser_api.get_accounts', [
+            [this.hiveAccname],
+          ])
+          const postingJsonMetadat = JSON.parse(res.result[0].posting_json_metadata)
+          this.hiveProfile = postingJsonMetadat.profile
+          console.log(this.hiveProfile)
+        } catch (err) {
+          console.log(err)
+        }
+      }
+      getAccounts()
     },
   },
 })
