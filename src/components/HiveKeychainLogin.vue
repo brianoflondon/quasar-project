@@ -83,7 +83,6 @@ async function login() {
     console.log('✅ success')
     storeUser.hiveAccname = keychainParams.value.data.username
     storeUser.login(keychainParams.value.data.username, keySelected.value)
-    isLoggedIn.value = true
     $q.notify(`User ${keychainParams.value.data.username} logged in`)
   } catch (error) {
     console.log('❌ failure')
