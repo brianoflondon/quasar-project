@@ -51,7 +51,7 @@
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
-import { useStoreUser } from 'src/stores/storeUser'
+import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useLoadHiveAvatar } from 'src/use/useHiveAvatar'
 import { useQuasar } from 'quasar'
@@ -136,7 +136,17 @@ async function logout() {
 }
 
 const userList = computed(() => {
-  return storeUser.users
+  // loop through storeusers.users and return all data including the login age
+  let answer = []
+  console.log('length', storeUser.users.length)
+  console.log('users', storeUser.users)
+  for (let i = 0; i < storeUser.users.length; i++) {
+    let { hiveAccname, keySelected, timestamp } = storeUser.users[i]
+    const user = new HiveUser(hiveAccname, keySelected, timestamp)
+    answer.push(user.getAllData())
+  }
+  console.log('finding userList', answer)
+  return answer
   // return storeUser.users.filter(obj => obj.hiveAccname === keychainParams.value.data.username)
 })
 /*
@@ -154,6 +164,8 @@ onMounted(async () => {
   inputAvatar.value = await useLoadHiveAvatar(
     keychainParams.value.data.username
   )
+  console.log('mounted users', storeUser.users)
+  console.log(userList.value)
 })
 
 onUnmounted(() => {

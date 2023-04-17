@@ -25,11 +25,15 @@
 </template>
 
 <script setup>
-import { defineComponent } from 'vue'
+import { defineComponent, onBeforeMount, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+import { useStoreUser } from 'src/stores/storeUser'
+
 const storeAPIStatus = useStoreAPIStatus()
 storeAPIStatus.update()
+
+const storeUser = useStoreUser()
 
 const $q = useQuasar()
 $q.dark.set('auto')
@@ -38,7 +42,9 @@ defineComponent({
   name: 'PricesBar',
 })
 
-// const emit = defineEmits(['response'])
+onMounted(() => {
+  console.log('PricesBar: onBeforeMount')
+})
 </script>
 
 <style>

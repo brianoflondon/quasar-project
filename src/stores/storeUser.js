@@ -1,12 +1,33 @@
 import { defineStore } from 'pinia'
-import { LocalStorage, SessionStorage } from 'quasar'
+// import { LocalStorage, SessionStorage } from 'quasar'
 
 // Declaration
-class HiveUser {
-  constructor(hiveAccname, keySelected) {
+export class HiveUser {
+  constructor(hiveAccname, keySelected, timestamp) {
     this.hiveAccname = hiveAccname
     this.keySelected = keySelected
-    this.timestamp = Date.now()
+    this.timestamp = timestamp || Date.now()
+  }
+
+  toJSON() {
+    return {
+      hiveAccname: this.hiveAccname,
+      keySelected: this.keySelected,
+      timestamp: this.timestamp,
+    }
+  }
+
+  getLoginAge() {
+    return Date.now() - this.timestamp
+  }
+
+  getAllData() {
+    return {
+      hiveAccname: this.hiveAccname,
+      keySelected: this.keySelected,
+      timestamp: this.timestamp,
+      loginAge: this.getLoginAge(),
+    }
   }
 }
 
@@ -37,10 +58,6 @@ export const useStoreUser = defineStore('storeUser', {
       this.hiveAccname = hiveAccname
       this.keySelected = keySelected
       try {
-        SessionStorage.set('users', this.users)
-        SessionStorage.set('isLoggedIn', this.isLoggedIn)
-        SessionStorage.set('hiveAccname', this.hiveAccname)
-        SessionStorage.set('keySelected', this.keySelected)
         this.getHiveProfile()
       } catch (err) {
         console.log(err)
@@ -49,16 +66,13 @@ export const useStoreUser = defineStore('storeUser', {
     },
     logout() {
       console.log('logout')
-      this.users = this.users.filter(
-        (obj) => obj.hiveAccname !== this.hiveAccname
-      )
+      // this.users = this.users.filter(
+      //   (obj) => obj.hiveAccname !== this.hiveAccname
+      // )
       this.isLoggedIn = false
       this.hiveAccname = ''
       this.keySelected = ''
       this.hiveProfile = null
-      SessionStorage.set('isLoggedIn', this.isLoggedIn)
-      SessionStorage.set('hiveAccname', this.hiveAccname)
-      SessionStorage.set('keySelected', this.keySelected)
     },
     getHiveProfile() {
       const getAccounts = async () => {
@@ -76,5 +90,9 @@ export const useStoreUser = defineStore('storeUser', {
       }
       getAccounts()
     },
+  },
+  persist: {
+    enabled: true,
+    strategies: [{ storage: localStorage, paths: ['users'] }],
   },
 })

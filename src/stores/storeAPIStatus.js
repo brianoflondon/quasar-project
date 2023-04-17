@@ -81,6 +81,9 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
       checkKeychain()
     },
   },
+  persist: {
+    enabled: true,
+  }
 })
 
 function prettyPrices(prices) {
