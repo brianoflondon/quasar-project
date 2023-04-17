@@ -144,6 +144,7 @@ const userList = computed(() => {
   return storeUser.getUserList()
 })
 
+
 /*
 Keyboard
 */
@@ -165,5 +166,6 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeyboard)
+  clearInterval(timerId)
 })
 </script>

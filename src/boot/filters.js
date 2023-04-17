@@ -29,7 +29,7 @@ export default boot(({ app }) => {
         output += `${duration.seconds()}s `
       }
 
-      if (duration.milliseconds() > 0) {
+      if (!output && duration.milliseconds() > 0) {
         output += `${duration.milliseconds()}ms `
       }
 
