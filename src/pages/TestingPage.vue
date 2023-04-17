@@ -32,10 +32,6 @@
     >
       <HiveUserSelect />
     </q-card>
-
-    <q-footer>
-      <PricesBar />
-    </q-footer>
   </q-page>
 </template>
 

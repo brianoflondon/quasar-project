@@ -42,21 +42,20 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <!-- <q-footer>
+    <q-footer>
       <PricesBar />
-    </q-footer> -->
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import { getAppDetails } from 'src/components/getAppDetails.js'
 import PricesBar from 'src/components/PricesBar.vue'
 import LogoTest from 'components/LogoTest.vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import TabBar from 'src/Layout/TabBar.vue'
-
 
 const storeUser = useStoreUser()
 
@@ -97,6 +96,16 @@ const essentialLinks = ref(linksList)
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+function clearAllStorage() {
+  console.log('clearing local storage')
+  window.sessionStorage.clear()
+  window.localStorage.clear()
+}
+
+onMounted(() => {
+  clearAllStorage()
+})
 </script>
 
 <!-- <script>

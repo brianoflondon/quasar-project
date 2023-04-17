@@ -15,6 +15,13 @@ if (window.location.hostname === 'localhost') {
   api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
 }
 
+function clearAllStorage() {
+  console.log('clearing local storage')
+  window.sessionStorage.clear()
+  window.localStorage.clear()
+}
+clearAllStorage()
+
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
