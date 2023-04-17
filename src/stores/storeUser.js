@@ -31,27 +31,28 @@ export class HiveUser {
   }
 }
 
-const customStorageUsers = {
-  getItem(key) {
-    const value = localStorage.getItem(key)
-    if (value) {
-      console.log('key', key, 'value', value)
-      return value
-      const users = JSON.parse(JSON.parse(value)).users
-      const hiveUsers = users.map((user) => {
-        const { hiveAccname, keySelected, timestamp } = user
-        return new HiveUser(hiveAccname, keySelected, timestamp)
-      })
-      return hiveUsers
-      // return value
-    }
-    return undefined
-  },
-  setItem(key, value) {
-    localStorage.setItem(key, JSON.stringify(value))
-    console.log('key', key, 'value', value)
-  },
-}
+// bad idea
+// const customStorageUsers = {
+//   getItem(key) {
+//     const value = localStorage.getItem(key)
+//     if (value) {
+//       console.log('key', key, 'value', value)
+//       return value
+//       const users = JSON.parse(JSON.parse(value)).users
+//       const hiveUsers = users.map((user) => {
+//         const { hiveAccname, keySelected, timestamp } = user
+//         return new HiveUser(hiveAccname, keySelected, timestamp)
+//       })
+//       return hiveUsers
+//       // return value
+//     }
+//     return undefined
+//   },
+//   setItem(key, value) {
+//     localStorage.setItem(key, JSON.stringify(value))
+//     console.log('key', key, 'value', value)
+//   },
+// }
 
 export const useStoreUser = defineStore('storeUser', {
   state: () => ({
@@ -96,6 +97,18 @@ export const useStoreUser = defineStore('storeUser', {
       this.keySelected = ''
       this.hiveProfile = null
     },
+    getUserList() {
+      // loop through storeusers.users and return all data including the login age
+      let answer = []
+      console.log('length', this.users.length)
+      console.log('users', this.users)
+      for (let i = 0; i < this.users.length; i++) {
+        let { hiveAccname, keySelected, timestamp } = this.users[i]
+        const user = new HiveUser(hiveAccname, keySelected, timestamp)
+        answer.push(user.getAllData())
+      }
+      return answer
+    },
     getHiveProfile() {
       const getAccounts = async () => {
         try {
@@ -115,6 +128,6 @@ export const useStoreUser = defineStore('storeUser', {
   },
   persist: {
     enabled: true,
-    strategies: [{ storage: customStorageUsers, paths: ['users'] }],
+    strategies: [{ storage: localStorage, paths: ['users'] }],
   },
 })

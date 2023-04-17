@@ -136,6 +136,7 @@ async function logout() {
 }
 
 const userList = computed(() => {
+  return storeUser.getUserList()
   // loop through storeusers.users and return all data including the login age
   let answer = []
   console.log('length', storeUser.users.length)
