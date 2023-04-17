@@ -1,5 +1,6 @@
 <template>
   <q-page>
+    <div>
       <h1>Testing Images</h1>
       <LogoTest :size="100" class="q-pa-sm" />
       <LogoTest :size="200" class="q-pa-sm" />
