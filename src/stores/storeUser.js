@@ -99,6 +99,7 @@ export const useStoreUser = defineStore('storeUser', {
     },
     getUserList() {
       // loop through storeusers.users and return all data including the login age
+      // converts user list back into user objects
       let answer = []
       console.log('length', this.users.length)
       console.log('users', this.users)

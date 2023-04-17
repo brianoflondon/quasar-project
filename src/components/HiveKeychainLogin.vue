@@ -137,19 +137,8 @@ async function logout() {
 
 const userList = computed(() => {
   return storeUser.getUserList()
-  // loop through storeusers.users and return all data including the login age
-  let answer = []
-  console.log('length', storeUser.users.length)
-  console.log('users', storeUser.users)
-  for (let i = 0; i < storeUser.users.length; i++) {
-    let { hiveAccname, keySelected, timestamp } = storeUser.users[i]
-    const user = new HiveUser(hiveAccname, keySelected, timestamp)
-    answer.push(user.getAllData())
-  }
-  console.log('finding userList', answer)
-  return answer
-  // return storeUser.users.filter(obj => obj.hiveAccname === keychainParams.value.data.username)
 })
+
 /*
 Keyboard
 */
