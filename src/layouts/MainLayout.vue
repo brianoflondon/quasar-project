@@ -42,9 +42,9 @@
     <q-page-container>
       <router-view />
     </q-page-container>
-    <q-footer>
+    <!-- <q-footer>
       <PricesBar />
-    </q-footer>
+    </q-footer> -->
   </q-layout>
 </template>
 
