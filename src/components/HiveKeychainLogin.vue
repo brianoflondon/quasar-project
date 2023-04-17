@@ -5,6 +5,7 @@
       {{ keySelected }} Key
     </div>
     <div v-if="!storeUser.isLoggedIn">▪️ Not Logged In</div>
+    
     <div class="row">
       <div class="col q-pa-sm vertical-middle">
         <q-input
@@ -16,12 +17,14 @@
             <q-icon name="fa-brands fa-hive" color="orange" />
           </template>
           <template v-slot:append>
-            <img
-              :src="inputAvatar"
-              height="50"
-              width="50"
-              @error="handleImageError"
-            />
+            <q-avatar size="md">
+              <q-img
+                :src="inputAvatar"
+                @error="handleImageError"
+                spinner="bars"
+                loading="lazy"
+              />
+            </q-avatar>
           </template>
         </q-input>
       </div>
@@ -60,6 +63,7 @@ import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useLoadHiveAvatar } from 'src/use/useHiveAvatar'
 import { useQuasar } from 'quasar'
+import HiveUserSelect from './HiveUserSelect.vue'
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
 const storeUser = useStoreUser()
@@ -144,7 +148,6 @@ const userList = computed(() => {
   return storeUser.getUserList()
 })
 
-
 /*
 Keyboard
 */
@@ -166,6 +169,5 @@ onMounted(async () => {
 
 onUnmounted(() => {
   document.removeEventListener('keydown', handleKeyboard)
-  clearInterval(timerId)
 })
 </script>

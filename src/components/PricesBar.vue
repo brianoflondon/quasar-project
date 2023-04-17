@@ -1,7 +1,8 @@
 <template>
   <div class="text-center">
-    Bitcoin <b>${{ storeAPIStatus.bitcoin }}</b> ▪️ Hive
-    <b>${{ storeAPIStatus.hive }}/ṩ{{ storeAPIStatus.hiveSats }}</b> ▪️ HBD
+    <i class="fa-brands fa-btc" />&nbsp;<b>${{ storeAPIStatus.bitcoin }}</b>
+    ▪️ <i class="fa-brands fa-hive" />&nbsp;
+    <b>${{ storeAPIStatus.hive }}&nbsp;/&nbsp;ṩ{{ storeAPIStatus.hiveSats }}</b> ▪️ HBD
     <b>${{ storeAPIStatus.hbd }} ▪️ </b>
     <q-btn flat dense :title="storeAPIStatus.apiError ? 'Failure' : 'Working'">
       {{ storeAPIStatus.statusDisp }}

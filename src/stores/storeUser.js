@@ -129,6 +129,17 @@ export const useStoreUser = defineStore('storeUser', {
   },
   persist: {
     enabled: true,
-    strategies: [{ storage: localStorage, paths: ['users'] }],
+    strategies: [
+      {
+        storage: localStorage,
+        paths: [
+          'users',
+          'keySelected',
+          'hiveAccname',
+          'hiveProfile',
+          'isLoggedIn',
+        ],
+      },
+    ],
   },
 })
