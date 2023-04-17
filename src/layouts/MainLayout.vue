@@ -19,11 +19,12 @@
         </div>
         <div v-if="storeUser.profileImageUrl" class="q-pa-sm">
           <q-avatar square size="md">
-            <img :src="storeUser.profileImageUrl"/>
+            <img :src="storeUser.profileImageUrl" />
           </q-avatar>
         </div>
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
+      <TabBar />
     </q-header>
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
@@ -41,15 +42,21 @@
     <q-page-container>
       <router-view />
     </q-page-container>
+    <q-footer>
+      <PricesBar />
+    </q-footer>
   </q-layout>
 </template>
 
 <script setup>
 import { defineComponent, ref } from 'vue'
 import { getAppDetails } from 'src/components/getAppDetails.js'
+import PricesBar from 'src/components/PricesBar.vue'
 import LogoTest from 'components/LogoTest.vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useStoreUser } from 'src/stores/storeUser'
+import TabBar from 'src/Layout/TabBar.vue'
+
 
 const storeUser = useStoreUser()
 
@@ -81,48 +88,6 @@ const linksList = [
     caption: 'V4V.app',
     icon: 'fa-brands fa-hive',
     link: 'https://v4v.app/',
-  },
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev',
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework',
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev',
   },
 ]
 const leftDrawerOpen = ref(false)

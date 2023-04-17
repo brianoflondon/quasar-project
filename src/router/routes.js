@@ -3,7 +3,14 @@ const routes = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '/images', component: () => import('pages/TestingImages.vue') },
+      {
+        path: '/images',
+        component: () => import('src/views/ViewTestingImages.vue'),
+      },
+      {
+        path: '/transfer',
+        component: () => import('src/views/ViewTestHiveTransfer.vue'),
+      },
       { path: '/testing', component: () => import('pages/TestingPage.vue') },
       { path: '/login', component: () => import('pages/LoginPage.vue') },
     ],
@@ -17,4 +24,4 @@ const routes = [
   },
 ]
 
-export default routes;
+export default routes

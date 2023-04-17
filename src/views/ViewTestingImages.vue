@@ -1,6 +1,7 @@
 <template>
   <q-page>
     <div>
+      <q-btn @click="clearAllStorage">Clear Storage</q-btn>
       <h1>Testing Images</h1>
       <LogoTest :size="100" class="q-pa-sm" />
       <LogoTest :size="200" class="q-pa-sm" />
@@ -17,9 +18,9 @@ defineComponent({
   name: 'ImagesPage',
 })
 
-onMounted(() => {
+function clearAllStorage() {
   console.log('clearing local storage')
   window.sessionStorage.clear()
   window.localStorage.clear()
-})
+}
 </script>

@@ -30,6 +30,16 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
         (state.apiStatus.crypto.hive.btc * 100000000).toFixed(0)
       )
     },
+    hiveHBDNumber: (state) => {
+      return state.apiStatus
+        ? state.apiStatus.crypto.v4vapp.Hive_HBD.toFixed(5)
+        : null
+    },
+    hiveSatsNumber: (state) => {
+      return state.apiStatus
+        ? state.apiStatus.crypto.hive.btc * 100000000
+        : null
+    },
     prices: (state) => {
       return state.apiStatus ? state.apiStatus.crypto : 'fetching prices'
     },
@@ -83,7 +93,7 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
   },
   persist: {
     enabled: true,
-  }
+  },
 })
 
 function prettyPrices(prices) {
