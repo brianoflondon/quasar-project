@@ -37,6 +37,11 @@
       <div>❌ Error</div>
       <div>{{ keychainError }}</div>
     </div>
+    <div>
+      <div v-for="user in userList" :key="user.hiveAccname">
+        {{ user.hiveAccname }} - {{ $filters.formatDuration(user.loginAge) }}
+      </div>
+    </div>
     <h3>User Profile</h3>
     <pre>
       {{ storeUser.hiveProfile }}
