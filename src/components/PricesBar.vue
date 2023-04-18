@@ -19,6 +19,7 @@
       </span>
       <span class="api-status-indicator q-pa-sm">
         <q-btn
+          @click="showDialog"
           flat
           dense
           :title="storeAPIStatus.apiError ? $t('failure') : $t('working')"
@@ -72,6 +73,10 @@ import { defineComponent, onBeforeMount, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useStoreUser } from 'src/stores/storeUser'
+// import SystemStatus from 'src/components/SystemStatus.vue'
+// import { systemStatus } from 'src/use/useSystemStatus'
+import { useI18n } from 'vue-i18n'
+const t = useI18n().t
 
 const storeAPIStatus = useStoreAPIStatus()
 storeAPIStatus.update()
@@ -85,13 +90,36 @@ defineComponent({
   name: 'PricesBar',
 })
 
-onMounted(() => {
-  console.log('PricesBar: onBeforeMount')
-})
+const title = `${t('system_status_title')} ${storeAPIStatus.statusDisp}`
+
+const message = `
+  <em>I can</em>
+  <span class="text-red">use</span>
+  <strong>HTML</strong>
+  ${t('system_status_intro')}
+  `
+
+function showDialog() {
+  $q.dialog({
+    title: title,
+    message: message,
+    html: true,
+  })
+    .onOk(() => {
+      // console.log('OK')
+    })
+    .onCancel(() => {
+      // console.log('Cancel')
+    })
+    .onDismiss(() => {
+      // console.log('I am triggered on both OK and Cancel')
+    })
+}
 </script>
 
-<style>
-/* This is where your CSS goes */
+<!-- notice lang="sass" -->
+<style lang="scss">
+/* This is where your SCSS goes */
 .body--dark {
   .q-footer {
     background-color: #03002c;

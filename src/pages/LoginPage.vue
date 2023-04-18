@@ -8,5 +8,4 @@
 
 <script setup>
 import HiveKeyChainLogin from 'src/components/HiveKeychainLogin.vue'
-import PricesBar from 'src/components/PricesBar.vue'
 </script>

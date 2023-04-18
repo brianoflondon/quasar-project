@@ -39,7 +39,6 @@
 import { defineComponent, ref, computed } from 'vue'
 // import { name, version } from '../../package.json'
 import { getAppDetails } from 'src/components/getAppDetails.js'
-import PricesBar from 'src/components/PricesBar.vue'
 import HiveUserSelect from 'src/components/HiveUserSelect.vue'
 import QuasarLazyLoad from 'src/components/QuasarLazyLoad.vue'
 import LogoTest from 'src/components/LogoTest.vue'
