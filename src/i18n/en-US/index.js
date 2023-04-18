@@ -9,4 +9,7 @@ export default {
   sats: 'シ',
   failure: 'Failure',
   working: 'Working',
+  keychain_installed: 'Keychain is Installed',
+  keychain_missing: 'Keychain is Missing',
+  reload_prices: 'Reload Prices',
 }
