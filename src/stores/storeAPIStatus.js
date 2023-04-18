@@ -48,7 +48,7 @@ export const useStoreAPIStatus = defineStore('storeAPIStatus', {
      */
     textBar() {
       // autocompletion ✨
-      return `Bitcoin <b>${this.bitcoin}</b> ▪️ Hive <b>${this.hive}</b> ▪️ HBD<b>${this.hbd}</b> ▪️ ${this.statusDisp}`
+      return `Bitcoin <strong>${this.bitcoin}<strong> ▪️ Hive <strong>${this.hive}<strong> ▪️ HBD<strong>${this.hbd}<strong> ▪️ ${this.statusDisp}`
     },
   },
 

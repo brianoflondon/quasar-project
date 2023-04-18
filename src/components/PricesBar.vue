@@ -1,10 +1,22 @@
 <template>
   <div class="text-center">
-    <i class="fa-brands fa-btc" />&nbsp;<b>${{ storeAPIStatus.bitcoin }}</b>
-    ▪️ <i class="fa-brands fa-hive" />&nbsp;
-    <b>${{ storeAPIStatus.hive }}&nbsp;/&nbsp;ṩ{{ storeAPIStatus.hiveSats }}</b> ▪️ HBD
-    <b>${{ storeAPIStatus.hbd }} ▪️ </b>
-    <q-btn flat dense :title="storeAPIStatus.apiError ? 'Failure' : 'Working'">
+    <span class="btc-price q-pa-sm">
+      <i class="fa-brands fa-btc" />&thinsp;
+      <strong>${{ storeAPIStatus.bitcoin }}</strong>
+    </span>
+    <span class="hive-price q-pa-sm">
+      <i class="fa-brands fa-hive" />&thinsp;
+      <strong>
+        ${{ storeAPIStatus.hive }}
+        &thinsp;/&thinsp;
+        {{ storeAPIStatus.hiveSats }}{{ $t('sats') }}
+      </strong>
+    </span>
+    <span class="hbd-price q-pa-sm">
+      HBD
+      <strong>${{ storeAPIStatus.hbd }}</strong>
+    </span>
+    <q-btn flat dense :title="storeAPIStatus.apiError ? $t('failure') : $t('working')">
       {{ storeAPIStatus.statusDisp }}
     </q-btn>
     <span v-if="storeAPIStatus.isKeychainIn">
