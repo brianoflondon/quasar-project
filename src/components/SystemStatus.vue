@@ -1,39 +1,25 @@
 <template>
-  <q-dialog> Hello </q-dialog>
+  <div v-if="showDialog">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">
+          {{ $t('system_status_title') }}
+        </div>
+        <div class="text-h6">
+          <div>
+            {{ $t('system_status_intro') }}
+          </div>
+        </div>
+      </q-card-section>
+    </q-card>
+  </div>
 </template>
 
 <script setup>
-import { useQuasar } from 'quasar'
 import { defineComponent } from 'vue'
-import { useI18n } from 'vue-i18n'
-const t = useI18n().t
+defineProps({ showDialog: Boolean })
 
-const $q = useQuasar()
 defineComponent({
   name: 'SystemStatus',
 })
-
-const longString = `
-  <em>I can</em>
-  < span class="text-red" > use</ > <strong>HTML</strong>
-  ${t('system_status_intro')}
-  `
-
-
-const showDialog = () => {
-  dialog({
-    title: t('system_status_intro'),
-    message: longString,
-    html: true,
-  })
-    .onOk(() => {
-      // console.log('OK')
-    })
-    .onCancel(() => {
-      // console.log('Cancel')
-    })
-    .onDismiss(() => {
-      // console.log('I am triggered on both OK and Cancel')
-    })
-}
 </script>

@@ -13,6 +13,10 @@ const routes = [
       },
       { path: '/testing', component: () => import('pages/TestingPage.vue') },
       { path: '/login', component: () => import('pages/LoginPage.vue') },
+      {
+        path: '/status',
+        component: () => import('src/views/ViewTestingSystemStatus.vue'),
+      },
     ],
   },
 

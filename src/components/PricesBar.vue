@@ -73,8 +73,7 @@ import { defineComponent, onBeforeMount, onMounted } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useStoreUser } from 'src/stores/storeUser'
-// import SystemStatus from 'src/components/SystemStatus.vue'
-// import { systemStatus } from 'src/use/useSystemStatus'
+import SystemStatus from 'src/components/SystemStatus.vue'
 import { useI18n } from 'vue-i18n'
 const t = useI18n().t
 
@@ -92,17 +91,20 @@ defineComponent({
 
 const title = `${t('system_status_title')} ${storeAPIStatus.statusDisp}`
 
-const message = `
-  <em>I can</em>
-  <span class="text-red">use</span>
-  <strong>HTML</strong>
-  ${t('system_status_intro')}
-  `
+// let message = `
+//   <em>I can</em>
+//   <span class="text-red">use</span>
+//   <strong>HTML</strong>
+//   ${t('system_status_intro')}
+//   `
+
+const message = '<SystemStatus />'
 
 function showDialog() {
+  console.log(message)
   $q.dialog({
     title: title,
-    message: message,
+    message: '<SystemStatus />',
     html: true,
   })
     .onOk(() => {

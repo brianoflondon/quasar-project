@@ -4,6 +4,7 @@
     <q-route-tab to="/transfer" exact replace :label="$t('transfer')" />
     <q-route-tab to="/testing" exact replace :label="$t('testing')" />
     <q-route-tab to="/images" exact replace :label="$t('images')" />
+    <q-route-tab to="/status" exact replace :label="$t('status')" />
   </q-tabs>
 </template>
 

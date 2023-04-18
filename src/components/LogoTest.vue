@@ -8,7 +8,11 @@
 // Logos should be in public folder not assets
 // https://www.youtube.com/watch?v=PkgUm_rlJgI&t=2s
 
-import { ref, computed } from 'vue'
+import { ref, computed, defineComponent } from 'vue'
+
+defineComponent({
+  name: 'LogoTest',
+})
 
 const props = defineProps({
   size: {

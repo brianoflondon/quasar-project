@@ -6,6 +6,7 @@ export default {
   login: 'Login',
   testing: 'Testing',
   images: 'Images',
+  status: 'Status',
   sats: 'シ',
   failure: 'Failure',
   working: 'Working',
@@ -14,5 +15,5 @@ export default {
   reload_prices: 'Reload Prices',
 
   system_status_title: 'V4V.app System Status',
-  system_status_intro: 'A big introduction to how the system works<br>lorem ipsum dolor sit amet',
+  system_status_intro: 'A big introduction to how the system works\nlorem ipsum dolor sit amet',
 }
