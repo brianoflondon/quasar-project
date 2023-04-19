@@ -2,6 +2,8 @@
   <div>
     <q-select
       filled
+      :label="label"
+      clearable
       autocomplete="options"
       :model-value="model"
       use-input
@@ -11,6 +13,7 @@
       :options="options"
       @filter="filterFn"
       @input-value="setModel"
+      @keyup.esc="clearInput"
     >
       <template v-slot:prepend>
         <q-avatar>
@@ -37,6 +40,8 @@ const props = defineProps({
   },
 })
 
+const emits = defineEmits(['hiveAccname'])
+
 const options = ref([])
 const model = ref(null)
 const hiveAvatar = ref(useHiveAvatar(''))
@@ -52,7 +57,8 @@ watch(model, (val) => {
   }
   model.value = val.trim()
   hiveAvatar.value = useHiveAvatar(val)
-  console.log('watch', val)
+  emits('hiveAccname', val)
+  console.log('watch - selected', val)
 })
 
 async function searchHiveUsernames(val) {
@@ -72,6 +78,12 @@ async function searchHiveUsernames(val) {
   } catch (error) {
     console.log(error)
   }
+}
+
+function clearInput() {
+  model.value = ''
+  options.value = []
+  hiveAvatar.value = useHiveAvatar('')
 }
 
 const filterFn = async (val, update) => {

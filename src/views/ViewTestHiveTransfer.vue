@@ -2,7 +2,7 @@
   <q-page>
     <q-card class="q-pa-sm">
       <div class="row-8 q-pa-sm">
-        <HiveUserPicker label="Sending From (child)" />
+        <HiveUserPicker label="Sending From (child)"  @hiveAccname="(msg) => sendFrom = msg" />
       </div>
       <div class="row-8 q-pa-sm">
         <q-input filled v-model="sendFrom" label="Sending From:" stack-label />
