@@ -2,18 +2,20 @@
   <div>
     <q-select
       filled
-      :label="label"
       clearable
-      autocomplete="options"
-      :model-value="model"
-      use-input
+      autocomplete
       hide-selected
+      :value="model"
+      use-input
       fill-input
       input-debounce="0"
+      :model-value="model"
+      v-model="model"
+      :label="label"
       :options="options"
+      @keyup.esc="clearInput"
       @filter="filterFn"
       @input-value="setModel"
-      @keyup.esc="clearInput"
     >
       <template v-slot:prepend>
         <q-avatar>
@@ -31,7 +33,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
-import { useStoreUser } from 'src/stores/storeUser';
+import { useStoreUser } from 'src/stores/storeUser'
 import { useHiveAvatar } from 'src/use/useHiveAvatar'
 
 const storeUser = useStoreUser()
@@ -55,12 +57,12 @@ if (props.useLoggedInUser && storeUser.isLoggedIn) {
   hiveAvatar.value = useHiveAvatar(storeUser.hiveAccname)
 }
 
-
 const emits = defineEmits(['hiveAccname'])
 
 const options = ref([])
 
 function setModel(val) {
+  val = val.toLowerCase().trim()
   model.value = val
 }
 
@@ -69,11 +71,16 @@ watch(model, (val) => {
     hiveAvatar.value = useHiveAvatar('')
     return
   }
-  model.value = val.trim()
+  // model.value = val.toLowerCase()
+  // model.value = val.trim()
   hiveAvatar.value = useHiveAvatar(val)
-  emits('hiveAccname', val)
-  console.log('watch - selected', val)
+  emits('hiveAccname', model.value)
+  // console.log('watch - selected', model.value)
 })
+
+async function virtualScroll(val) {
+  console.log('virtualScroll', val)
+}
 
 async function searchHiveUsernames(val) {
   if (val.length < 2) {
@@ -99,7 +106,9 @@ function clearInput() {
 }
 
 const filterFn = async (val, update) => {
-  console.log('filterFn', val)
+  // console.log('filterFn', val)
+  val = val.toLowerCase()
+  model.value = val
   await searchHiveUsernames(val)
   if (val === '') {
     update(() => {
