@@ -12,6 +12,7 @@
           <q-input
             filled
             type="number"
+            input-mode="numeric"
             v-model="amount"
             label="Amount to Send:"
             stack-label
