@@ -2,13 +2,18 @@
   <q-page>
     <q-card class="q-pa-sm">
       <div class="row-8 q-pa-sm">
-        <HiveUserPicker label="Sending From (child)"  @hiveAccname="(msg) => sendFrom = msg" />
+        <HiveUserPicker
+          label="Sending From"
+          :use-logged-in-user="true"
+          @hiveAccname="(msg) => (sendFrom = msg)"
+        />
       </div>
       <div class="row-8 q-pa-sm">
-        <q-input filled v-model="sendFrom" label="Sending From:" stack-label />
-      </div>
-      <div class="row-8 q-pa-sm">
-        <q-input filled v-model="sendTo" label="Sending To:" stack-label />
+        <HiveUserPicker
+          label="Sending To"
+          :use-logged-in-user="false"
+          @hiveAccname="(msg) => (sendTo = msg)"
+        />
       </div>
       <div class="row q-pa-sm">
         <div class="col-4 q-pr-sm">
@@ -217,11 +222,6 @@ async function sendTransfer() {
     console.log({ error })
     $q.notify(`${error.message}`)
   }
-}
-
-function formatNumber(value) {
-  console.log(value)
-  return value.toLocaleString()
 }
 
 const vAutofocus = {

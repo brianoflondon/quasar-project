@@ -30,21 +30,35 @@
 </template>
 
 <script setup>
-import { useHiveAvatar } from 'src/use/useHiveAvatar'
 import { ref, watch } from 'vue'
+import { useStoreUser } from 'src/stores/storeUser';
+import { useHiveAvatar } from 'src/use/useHiveAvatar'
 
+const storeUser = useStoreUser()
 const props = defineProps({
   label: {
     type: String,
     default: '',
   },
+  useLoggedInUser: {
+    type: Boolean,
+    default: false,
+  },
 })
+
+// start off using the logged in user if available
+const model = ref(null)
+const hiveAvatar = ref(useHiveAvatar(''))
+
+if (props.useLoggedInUser && storeUser.isLoggedIn) {
+  model.value = storeUser.hiveAccname
+  hiveAvatar.value = useHiveAvatar(storeUser.hiveAccname)
+}
+
 
 const emits = defineEmits(['hiveAccname'])
 
 const options = ref([])
-const model = ref(null)
-const hiveAvatar = ref(useHiveAvatar(''))
 
 function setModel(val) {
   model.value = val
@@ -62,7 +76,6 @@ watch(model, (val) => {
 })
 
 async function searchHiveUsernames(val) {
-  console.log(val)
   if (val.length < 2) {
     return
   }
@@ -72,7 +85,6 @@ async function searchHiveUsernames(val) {
       6,
     ])
     const accounts = res.result.map((el) => el.account)
-    console.log(accounts)
     options.value = accounts
     hiveAvatar.value = useHiveAvatar(accounts[0])
   } catch (error) {
