@@ -1,21 +1,27 @@
+import MainLayout from 'layouts/MainLayout.vue'
+import ViewTestingImages from 'src/views/ViewTestingImages.vue'
+import ViewTestHiveTransfer from 'src/views/ViewTestHiveTransfer.vue'
+import TestingPage from 'pages/TestingPage.vue'
+import LoginPage from 'pages/LoginPage.vue'
+import ViewTestingSystemStatusVue from 'src/views/ViewTestingSystemStatus.vue'
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    component: MainLayout,
     children: [
       {
         path: '/images',
-        component: () => import('src/views/ViewTestingImages.vue'),
+        component: ViewTestingImages,
       },
       {
         path: '/transfer',
-        component: () => import('src/views/ViewTestHiveTransfer.vue'),
+        component: ViewTestHiveTransfer,
       },
-      { path: '/testing', component: () => import('pages/TestingPage.vue') },
-      { path: '/login', component: () => import('pages/LoginPage.vue') },
+      { path: '/testing', component: TestingPage },
+      { path: '/login', component: LoginPage },
       {
         path: '/status',
-        component: () => import('src/views/ViewTestingSystemStatus.vue'),
+        component: ViewTestingSystemStatusVue,
       },
     ],
   },

@@ -1,11 +1,11 @@
 <template>
   <q-footer>
     <div class="text-center">
-      <span class="btc-price q-pa-sm">
+      <span class="price-bar-item btc-price q-pa-xs">
         <i class="fa-brands fa-btc" />&thinsp;
         <strong>${{ storeAPIStatus.bitcoin }}</strong>
       </span>
-      <span class="hive-price q-pa-sm">
+      <span class="price-bar-item hive-price q-pa-xs">
         <i class="fa-brands fa-hive" />&thinsp;
         <strong>
           ${{ storeAPIStatus.hive }}
@@ -13,13 +13,13 @@
           {{ storeAPIStatus.hiveSats }}{{ $t('sats') }}
         </strong>
       </span>
-      <span class="hbd-price q-pa-sm">
+      <span class="price-bar-item hbd-price q-pa-xs">
         HBD
         <strong>${{ storeAPIStatus.hbd }}</strong>
       </span>
-      <span class="api-status-indicator q-pa-sm">
+      <span class="price-bar-item api-status-indicator q-pa-xs">
         <q-btn
-          @click="showDialog"
+          @click="alert = true"
           flat
           dense
           :title="storeAPIStatus.apiError ? $t('failure') : $t('working')"
@@ -27,7 +27,7 @@
           {{ storeAPIStatus.statusDisp }}
         </q-btn>
       </span>
-      <span class="keychain-status-indicator">
+      <span class="price-bar-item keychain-status-indicator q-pa-xs">
         <q-btn
           flat
           dense
@@ -47,13 +47,16 @@
           />
         </q-btn>
       </span>
-      <q-btn
-        icon="refresh"
-        :title="$t('reload_prices')"
-        flat
-        dense
-        @click="storeAPIStatus.update()"
-      />
+      <span class="price-bar-item reload-status q-pa-xs">
+        <q-btn
+          icon="refresh"
+          :title="$t('reload_prices')"
+          flat
+          dense
+          @click="storeAPIStatus.update()"
+        />
+      </span>
+      <span class="price-bar-item dark-toggle q-pa-xs">
       <q-btn
         flat
         dense
@@ -64,12 +67,26 @@
         :icon="$q.dark.isActive ? 'dark_mode' : 'light_mode'"
         size="sm"
       />
+      </span>
     </div>
   </q-footer>
+  <q-dialog v-model="alert">
+    <q-card>
+      <q-card-section>
+        <div class="text-h6">System Status</div>
+      </q-card-section>
+      <q-card-section class="q-pt-none">
+        <SystemStatus />
+      </q-card-section>
+      <q-card-actions align="right">
+        <q-btn flat label="OK" color="primary" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
-import { defineComponent, onBeforeMount, onMounted } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useQuasar } from 'quasar'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useStoreUser } from 'src/stores/storeUser'
@@ -91,32 +108,7 @@ defineComponent({
 
 const title = `${t('system_status_title')} ${storeAPIStatus.statusDisp}`
 
-// let message = `
-//   <em>I can</em>
-//   <span class="text-red">use</span>
-//   <strong>HTML</strong>
-//   ${t('system_status_intro')}
-//   `
-
-const message = '<SystemStatus />'
-
-function showDialog() {
-  console.log(message)
-  $q.dialog({
-    title: title,
-    message: '<SystemStatus />',
-    html: true,
-  })
-    .onOk(() => {
-      // console.log('OK')
-    })
-    .onCancel(() => {
-      // console.log('Cancel')
-    })
-    .onDismiss(() => {
-      // console.log('I am triggered on both OK and Cancel')
-    })
-}
+const alert = ref(false)
 </script>
 
 <!-- notice lang="sass" -->

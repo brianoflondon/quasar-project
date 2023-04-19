@@ -1,14 +1,10 @@
 <template>
-  <q-btn flat dense @click="showDialog = !showDialog">Show/hide</q-btn>
-  {{ showDialog }}
   <div>
-    <SystemStatus :show-dialog="showDialog" />
+    <SystemStatus />
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import SystemStatus from 'src/components/SystemStatus.vue'
-
-const showDialog = ref(true)
 </script>
