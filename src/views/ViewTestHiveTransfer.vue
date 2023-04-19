@@ -2,8 +2,7 @@
   <q-page>
     <q-card class="q-pa-sm">
       <div class="row-8 q-pa-sm">
-        <HiveUserPicker :v-model="sendFrom" label="Sending From child:" />
-        {{ sendFrom }}
+        <HiveUserPicker label="Sending From (child)" />
       </div>
       <div class="row-8 q-pa-sm">
         <q-input filled v-model="sendFrom" label="Sending From:" stack-label />
@@ -232,6 +231,7 @@ const vAutofocus = {
 }
 
 onMounted(() => {
+  console.log(storeUser.hiveAccname)
   if (storeUser.hiveAccname) {
     sendFrom.value = storeUser.hiveAccname
     if (storeUser.hiveAccname === 'v4vapp.tre') {

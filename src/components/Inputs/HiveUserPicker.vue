@@ -1,36 +1,18 @@
 <template>
-  <div>
-    <q-input
-      outlined
-      :value="modelValue"
-      :label="label"
-      @input="$emit('update:modelValue', $event.target.value)"
-    />
-  </div>
-  <div>Model Value is {{ modelValue }}</div>
+  <q-input v-model="user" filled :label="label" stack-label />
 </template>
 
 <script setup>
-import { defineComponent, ref } from 'vue'
+import { ref } from 'vue'
+import { useStoreUser } from 'src/stores/storeUser'
+
+const storeUser = useStoreUser()
 
 const props = defineProps({
-  modelValue: {
+  label: {
     type: String,
     default: '',
   },
-  label: {
-    type: String,
-    default: 'Default Label',
-  },
 })
-defineEmits(['update:modelValue'])
-
-defineComponent({
-  name: 'HiveUserPicker',
-})
-
-const user = ref(props.modelValue)
-const modelValue = ref(props.modelValue)
-console.log('inside hive user picker')
-console.log(user)
+const user = ref(storeUser.hiveAccname)
 </script>
