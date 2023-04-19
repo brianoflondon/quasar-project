@@ -5,7 +5,7 @@
       {{ keySelected }} Key
     </div>
     <div v-if="!storeUser.isLoggedIn">▪️ Not Logged In</div>
-    
+
     <div class="row">
       <div class="col q-pa-sm vertical-middle">
         <q-input
@@ -136,7 +136,7 @@ async function login() {
     console.log('❌ failure')
     console.log({ error })
     keychainError.value = error
-    $q.notify(`Error: ${error.message}`)
+    $q.notify(`${error.message}`)
   }
 }
 

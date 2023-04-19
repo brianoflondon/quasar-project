@@ -2,6 +2,10 @@
   <q-page>
     <q-card class="q-pa-sm">
       <div class="row-8 q-pa-sm">
+        <HiveUserPicker :v-model="sendFrom" label="Sending From child:" />
+        {{ sendFrom }}
+      </div>
+      <div class="row-8 q-pa-sm">
         <q-input filled v-model="sendFrom" label="Sending From:" stack-label />
       </div>
       <div class="row-8 q-pa-sm">
@@ -12,7 +16,7 @@
           <q-input
             filled
             type="number"
-            input-mode="numeric"
+            inputmode="decimal"
             v-model="amount"
             label="Amount to Send:"
             stack-label
@@ -33,7 +37,7 @@
         </div>
       </div>
       <div class="row q-pa-sm">
-        <div class="col-4 q-pr-sm output-values">
+        <div class="col-3 q-pr-sm output-values">
           <q-input
             outlined
             :editable="false"
@@ -44,7 +48,7 @@
             tabindex="-1"
           />
         </div>
-        <div class="col-4 q-pr-sm">
+        <div class="col-3 q-pr-sm">
           <q-input
             outlined
             :editable="false"
@@ -56,13 +60,24 @@
             tabindex="-1"
           />
         </div>
-        <div class="col-4 q-pr-sm">
+        <div class="col-3 q-pr-sm">
           <q-input
             outlined
             :editable="false"
             :readonly="true"
             v-model="satsAmount"
             label="Sats Amount:"
+            stack-label
+            tabindex="-1"
+          />
+        </div>
+        <div class="col-3 q-pr-sm">
+          <q-input
+            outlined
+            :editable="false"
+            :readonly="true"
+            v-model="USDAmount"
+            label="USD Amount:"
             stack-label
             tabindex="-1"
           />
@@ -83,6 +98,7 @@ import { useQuasar } from 'quasar'
 import { KeychainSDK } from 'keychain-sdk'
 import { useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 
 const $q = useQuasar()
 const storeUser = useStoreUser()
@@ -101,8 +117,16 @@ const optionsCurrency = [
     value: 'HBD',
   },
   {
-    label: 'Sats (BTC)',
+    label: 'Sats',
     value: 'sats',
+  },
+  {
+    label: 'BTC',
+    value: 'BTC',
+  },
+  {
+    label: 'USD',
+    value: 'USD',
   },
 ]
 
@@ -124,8 +148,16 @@ const hiveAmount = computed(() => {
     return Number(amount.value / storeAPIStatus.hiveHBDNumber).toFixed(3)
   }
   if (optionsSelected.value === 'sats') {
-    console.log(storeAPIStatus.hiveSatsNumber)
     return Number(amount.value / storeAPIStatus.hiveSatsNumber).toFixed(3)
+  }
+  if (optionsSelected.value === 'BTC') {
+    return Number(amount.value / storeAPIStatus.hiveBTCNumber).toFixed(3)
+  }
+  if (optionsSelected.value === 'USD') {
+    console.log(storeAPIStatus.apiStatus.crypto.hive.usd)
+    return Number(
+      amount.value / storeAPIStatus.apiStatus.crypto.hive.usd
+    ).toFixed(3)
   }
   return 99
 })
@@ -135,12 +167,36 @@ const HBDAmount = computed(() => {
 })
 
 const satsAmount = computed(() => {
-  return Number(hiveAmount.value * storeAPIStatus.hiveSatsNumber).toFixed(3)
+  return tidyNumber(
+    (hiveAmount.value * storeAPIStatus.hiveSatsNumber).toFixed(0)
+  )
 })
+
+const USDAmount = computed(() => {
+  return tidyNumber(
+    (hiveAmount.value * storeAPIStatus.apiStatus.crypto.hive.usd).toFixed(2)
+  )
+})
+
+function tidyNumber(x) {
+  if (x) {
+    const parts = x.toString().split('.')
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    return parts.join('.')
+  } else {
+    return null
+  }
+}
 
 async function sendTransfer() {
   try {
     const keychain = new KeychainSDK(window)
+
+    let currencyToSend = 'HIVE'
+    if (optionsSelected.value === 'HBD') {
+      currencyToSend = 'HBD'
+    }
+
     const formParamsAsObject = {
       data: {
         username: sendFrom.value,
@@ -148,7 +204,7 @@ async function sendTransfer() {
         amount: hiveAmount.value,
         memo: memo.value,
         enforce: true,
-        currency: 'HIVE',
+        currency: currencyToSend,
       },
       options: {},
     }
@@ -160,7 +216,7 @@ async function sendTransfer() {
   } catch (error) {
     console.log('❌ failure')
     console.log({ error })
-    $q.notify(`Error: ${error.message}`)
+    $q.notify(`${error.message}`)
   }
 }
 
@@ -176,10 +232,12 @@ const vAutofocus = {
 }
 
 onMounted(() => {
-  sendFrom.value = storeUser.hiveAccname
-  if (storeUser.hiveAccname === 'v4vapp.tre') {
-    sendTo.value = 'deepcrypto8'
-    memo.value = '100082561'
+  if (storeUser.hiveAccname) {
+    sendFrom.value = storeUser.hiveAccname
+    if (storeUser.hiveAccname === 'v4vapp.tre') {
+      sendTo.value = 'deepcrypto8'
+      memo.value = '100082561'
+    }
   }
 })
 </script>
