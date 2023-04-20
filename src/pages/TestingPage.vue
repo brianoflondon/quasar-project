@@ -1,11 +1,17 @@
 <template>
   <q-page class="flex flex-center">
+    <q-card class="q-pa-sm">
+      <div class="row-8 q-pa-sm">
+        <HiveUserSelect
+          label="Sending From"
+          :use-logged-in-user="true"
+          @hiveAccname="(msg) => (sendFrom = msg)"
+        />
+      </div>
+    </q-card>
     <q-card>
       <LogoTest :size="300" />
       <LogoTest :size="100" />
-    </q-card>
-    <q-card>
-      <QuasarLazyLoad />
     </q-card>
     <q-card
       class="my-card text-white q-ma-lg"
@@ -26,12 +32,6 @@
         {{ storeAPIStatus.apiStatus.crypto.fmt.hive }}<br />
       </q-card-section>
     </q-card>
-    <q-card
-      class="my-card text-white q-ma-lg"
-      style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
-    >
-      <HiveUserSelect />
-    </q-card>
   </q-page>
 </template>
 
@@ -39,8 +39,8 @@
 import { defineComponent, ref, computed } from 'vue'
 // import { name, version } from '../../package.json'
 import { getAppDetails } from 'src/components/getAppDetails.js'
-import HiveUserSelect from 'src/components/HiveUserSelect.vue'
-import QuasarLazyLoad from 'src/components/QuasarLazyLoad.vue'
+import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
+import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
 import LogoTest from 'src/components/LogoTest.vue'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 const storeAPIStatus = useStoreAPIStatus()

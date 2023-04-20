@@ -3,14 +3,14 @@
     <q-card class="q-pa-sm">
       <div class="row-8 q-pa-sm">
         <HiveUserPicker
-          label="Sending From"
+          :label="$t('sending') + ' ' + $t('from')"
           :use-logged-in-user="true"
           @hiveAccname="(msg) => (sendFrom = msg)"
         />
       </div>
       <div class="row-8 q-pa-sm">
         <HiveUserPicker
-          label="Sending To"
+          :label="$t('sending') + ' ' + $t('to')"
           :use-logged-in-user="false"
           @hiveAccname="(msg) => (sendTo = msg)"
         />
@@ -22,7 +22,7 @@
             type="number"
             inputmode="decimal"
             v-model="amount"
-            label="Amount to Send:"
+            :label="$t('amount_to_send')"
             stack-label
             v-autofocus
           />

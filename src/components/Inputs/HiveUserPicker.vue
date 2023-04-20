@@ -2,21 +2,28 @@
   <div>
     <q-select
       filled
-      clearable
+      new-value-mode="add"
       autocomplete
+      autofocus
       hide-selected
+      model-value="model"
       :value="model"
       use-input
       fill-input
-      input-debounce="0"
-      :model-value="model"
+      input-debounce="10"
       v-model="model"
-      :label="label"
+      :label="changingLabel"
       :options="options"
+      no-icon
       @keyup.esc="clearInput"
-      @filter="filterFn"
+      @input="inputRecv"
       @input-value="setModel"
-    >
+      @new-value="newValue"
+      >
+      <!-- @filter="filterFn"
+        menu dialog forces the iphone like behaviour on desktop.
+        behavior="dialog"
+      -->
       <template v-slot:prepend>
         <q-avatar>
           <img :src="hiveAvatar" />
@@ -35,6 +42,9 @@
 import { ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import { useHiveAvatar } from 'src/use/useHiveAvatar'
+// This comes from https://github.com/ecency/hivescript
+import badActorList from '@hiveio/hivescript/bad-actors.json'
+import 'src/assets/hive-tx.min.js'
 
 const storeUser = useStoreUser()
 const props = defineProps({
@@ -47,6 +57,8 @@ const props = defineProps({
     default: false,
   },
 })
+
+const changingLabel = ref(props.label)
 
 // start off using the logged in user if available
 const model = ref(null)
@@ -61,7 +73,12 @@ const emits = defineEmits(['hiveAccname'])
 
 const options = ref([])
 
+function newValue(e) {
+  console.log('newValue', e)
+}
+
 function setModel(val) {
+  console.log('setModel', val)
   val = val.toLowerCase().trim()
   model.value = val
 }
@@ -71,16 +88,11 @@ watch(model, (val) => {
     hiveAvatar.value = useHiveAvatar('')
     return
   }
-  // model.value = val.toLowerCase()
-  // model.value = val.trim()
   hiveAvatar.value = useHiveAvatar(val)
+  changingLabel.value = (props.label + ' @' + options.value[0])
+  console.log(changingLabel.value)
   emits('hiveAccname', model.value)
-  // console.log('watch - selected', model.value)
 })
-
-async function virtualScroll(val) {
-  console.log('virtualScroll', val)
-}
 
 async function searchHiveUsernames(val) {
   if (val.length < 2) {
@@ -105,8 +117,15 @@ function clearInput() {
   hiveAvatar.value = useHiveAvatar('')
 }
 
+async function inputRecv(e) {
+  try {
+    model.value = e.target.value.trim().toLowerCase()
+    await searchHiveUsernames(model.value)
+  } catch (error) {}
+}
+
 const filterFn = async (val, update) => {
-  // console.log('filterFn', val)
+  console.log('filterFn', val)
   val = val.toLowerCase()
   model.value = val
   await searchHiveUsernames(val)

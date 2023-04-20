@@ -77,6 +77,11 @@
     verror "^1.10.0"
     whatwg-fetch "^3.0.0"
 
+"@hiveio/hivescript@^1.2.9":
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/@hiveio/hivescript/-/hivescript-1.2.9.tgz#02b6947cba6aa4869395c61a63583c91421711bb"
+  integrity sha512-KTwthTS2NdCiIHKguey881sxo8I/7vaPGA3Ideu5cBmZbgMobvODGPtrkYt3JrUZ8lNG1c1uaKQjXZPDyXrK7w==
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"

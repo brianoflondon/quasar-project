@@ -14,6 +14,14 @@ export default {
   keychain_missing: 'Keychain is Missing',
   reload_prices: 'Reload Prices',
 
+  amount_to_send: 'Amount to Send',
+  amount: 'Amount',
+  send: 'Send',
+  to: 'to',
+  To: 'To',
+  from: 'from',
+  From: 'From',
+
   system_status_title: 'V4V.app System Status',
   system_status_intro: 'A big introduction to how the system works\nlorem ipsum dolor sit amet',
 }

@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia'
+import 'src/assets/hive-tx.min.js'
+
 // import { LocalStorage, SessionStorage } from 'quasar'
 
 // Declaration

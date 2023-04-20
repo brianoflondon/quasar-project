@@ -27,6 +27,7 @@
             </q-avatar>
           </template>
         </q-input>
+        <HiveUserPicker />
       </div>
       <div class="col-2 q-pa-sm vertical-middle">
         <q-btn class="vertical-middle" rounded @click="login">Login</q-btn>
@@ -63,7 +64,7 @@ import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useLoadHiveAvatar } from 'src/use/useHiveAvatar'
 import { useQuasar } from 'quasar'
-import HiveUserSelect from './HiveUserSelect.vue'
+import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
 const storeUser = useStoreUser()
