@@ -3,7 +3,7 @@
     <q-select
       filled
       new-value-mode="add"
-      autocomplete
+      autocomplete="on"
       autofocus
       hide-selected
       model-value="model"
@@ -19,7 +19,7 @@
       @input="inputRecv"
       @input-value="setModel"
       @new-value="newValue"
-      >
+    >
       <!-- @filter="filterFn"
         menu dialog forces the iphone like behaviour on desktop.
         behavior="dialog"
@@ -83,16 +83,29 @@ function setModel(val) {
   model.value = val
 }
 
-watch(model, (val) => {
+watch(model, async (val) => {
   if (val === null) {
     hiveAvatar.value = useHiveAvatar('')
     return
   }
   hiveAvatar.value = useHiveAvatar(val)
-  changingLabel.value = (props.label + ' @' + options.value[0])
+  changingLabel.value = props.label + ' @' + options.value[0]
   console.log(changingLabel.value)
   emits('hiveAccname', model.value)
+  // await hiveUserProperties(model.value)
 })
+
+async function hiveUserProperties(val) {
+  if (val.length < 2) {
+    return
+  }
+  try {
+    const res = await hiveTx.call('condenser_api.get_accounts', [[val]])
+    console.log(res)
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 async function searchHiveUsernames(val) {
   if (val.length < 2) {

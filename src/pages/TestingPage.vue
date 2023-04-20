@@ -4,8 +4,11 @@
       <HiveUserSelect
         label="Testing Page Sending From"
         :use-logged-in-user="false"
-        @hiveAccname="(msg) => (sendFrom = msg)"
+        @selectUsername="(msg) => (accName = msg)"
       />
+    </div>
+    <div>
+      {{ accName }}
     </div>
     <div v-if="false">
       <q-card>

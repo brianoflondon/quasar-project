@@ -1,41 +1,57 @@
 <template>
+  <pre>Input:    |{{ input }}|</pre>
+  <pre>Selected: |{{ selected }}|</pre>
+  <pre>Fullname: |{{ fullName }}|</pre>
+  <pre>{{ usernameSuggestions }}</pre>
   <div>
     <q-select
-      clearable
-      autocomplete
-      hide-selected
-      use-input
-      fill-input
-      input-debounce="0"
-      v-model="input"
+      v-autofocus
       :label="label"
+      :multiple="false"
+      clearable
+      filled
+      input-debounce="100"
+      hide-selected
+      fill-input
+      use-input
+      v-model="input"
       :options="usernameSuggestions"
-      @keyup.esc="clearInput"
       @filter="filterFn"
-      @filter-abort="abortFilterFn"
-      @input-value="virtualScroll"
-      @input="$emit('selectUsername', input)"
-      autofocus
-    />
+      @virtual-scroll="vScroll"
+      @keyup.esc="clearInput"
+      @keyup.backspace="resetSuggestions"
+      style="width: 400px; padding-bottom: 32px"
+      hint="Minimum 2 characters to trigger filtering"
+    >
+      <template v-slot:no-option>
+        <q-item>
+          <q-item-section class="text-grey">
+            {{ $t('no_results') }}
+          </q-item-section>
+        </q-item>
+      </template>
+    </q-select>
   </div>
 </template>
 
 <script setup>
 import { ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
+import { useHiveProfile } from 'src/use/useHiveAvatar'
 import badActorList from '@hiveio/hivescript/bad-actors.json'
-import { store } from 'quasar/wrappers'
 
-const storeUser = useStoreUser()
-
-const input = ref('')
-const usernameSuggestions = ref([
+const staticSuggestions = [
   'brianoflondon',
   'hivehydra',
   'v4vapp',
   'v4vapp.tre',
   'v4vapp.dhf',
-])
+]
+
+const storeUser = useStoreUser()
+const input = ref('')
+const usernameSuggestions = ref(staticSuggestions)
+const selected = ref('')
 const fullName = ref('')
 const badActors = ref(badActorList)
 let vscrollAcc = null
@@ -53,68 +69,87 @@ const props = defineProps({
 
 const emits = defineEmits(['selectUsername'])
 
-console.log('----------------------- HiveUserSelect -----------------------')
+watch(
+  () => input.value,
+  async (username) => {
+    console.log('input.value', username)
+    try {
+      await updateHiveProfile(username)
+    } catch (e) {
+      console.log('updateHiveProfile error', e)
+    }
+  }
+)
 
-if (props.useLoggedInUser) {
+if (props.useLoggedInUser && storeUser.isLoggedIn) {
   input.value = storeUser.hiveAccname
 }
 
-watch(input, (newState) => {
-  console.log(input.value)
-  input.value = newState
-})
+console.log('----------------------- HiveUserSelect -----------------------')
 
-async function filterFn(val, update, abort) {
-  await searchHiveUsernames(val)
-  console.log('filterFn val', val)
-  console.log('filterFn update', update)
-  console.log('filterFn abort', abort)
-  update = async function (val) {
-    console.log('update', val)
-    await searchHiveUsernames(val)
+async function vScroll(val) {
+  console.log('vScroll', val)
+  selected.value = usernameSuggestions.value[val.index]
+  if (usernameSuggestions.value.length === 1) {
+    input.value = selected.value
   }
+  console.log('selectedUser', selected.value)
 }
 
-async function searchHiveUsernames(val) {
-  console.log('searchHiveUsernames', val)
-  if (val.length < 5) {
+async function checkInput() {
+  console.log('checkInput', input.value)
+}
+
+async function updateHiveProfile() {
+  const hiveProfile = await useHiveProfile(selected.value)
+  fullName.value = hiveProfile.name
+  console.log('fullName', fullName.value)
+}
+
+function filterFn(val, update, abort) {
+  if (val.length < 2) {
+    abort()
+    if (val.length === 0) {
+      clearInput()
+    }
     return
   }
-  const partialUsername = val.toLowerCase()
-  try {
-    const data = await hiveTx.call('condenser_api.get_account_reputations', [
-      partialUsername,
-      6,
-    ])
-    console.log('data', data)
-    const accounts = data.result.map((el) => el.account)
-    usernameSuggestions.value = accounts
-  } catch (e) {
-    console.log('error', e)
-  }
+  console.log('filterFn input', input.value)
+  console.log('filterFn val', val)
+  update(() => {
+    const needle = val.toLowerCase().trim()
+    console.log('needle', needle)
+    usernameSuggestions.value = usernameSuggestions.value.filter(
+      (v) => v.toLowerCase().indexOf(needle) > -1
+    )
+  })
 }
 
-function abortFilterFn() {
-  console.log('abortFilterFn')
-}
-
-async function virtualScroll(obj) {
-  console.log('virtualScroll', obj)
-  try {
-    const data = await hiveTx.call('condenser_api.get_accounts', [[obj]])
-    if (data[0] && data[0].posting_json_metadata) {
-      fullName.value = JSON.parse(data[0].posting_json_metadata).profile.name
-    } else {
-      fullName.value = ''
-    }
-    console.log('data', data)
-  } catch (e) {
-    console.log('error', e)
-  }
-  vscrollAcc = obj
+const vAutofocus = {
+  mounted(el) {
+    el.focus()
+  },
 }
 
 function clearInput() {
   input.value = ''
+  selected.value = ''
+  fullName.value = ''
+  resetSuggestions()
 }
+
+function resetSuggestions() {
+  usernameSuggestions.value = staticSuggestions
+}
+
+// filterFn (val, update, abort) {
+//   if (val.length < 2) {
+//     abort()
+//     return
+//   }
+
+//   update(() => {
+//     const needle = val.toLowerCase()
+//     options.value = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
+//   })
 </script>

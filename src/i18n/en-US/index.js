@@ -21,6 +21,7 @@ export default {
   To: 'To',
   from: 'from',
   From: 'From',
+  no_results: 'No Results',
 
   system_status_title: 'V4V.app System Status',
   system_status_intro: 'A big introduction to how the system works\nlorem ipsum dolor sit amet',

@@ -21,7 +21,7 @@ export async function useLoadHiveAvatar(username) {
     const res = await axios({
       url: url,
       method: 'GET',
-      responseType: 'blob'
+      responseType: 'blob',
     })
     console.log('res', res)
     if (res.status === 200) {
@@ -32,5 +32,15 @@ export async function useLoadHiveAvatar(username) {
     }
   } catch (err) {
     return 'avatars/unkown_hive_user.png'
+  }
+}
+
+export async function useHiveProfile(hiveAccname) {
+  try {
+    const res = await hiveTx.call('condenser_api.get_accounts', [[hiveAccname]])
+    const postingJsonMetadat = JSON.parse(res.result[0].posting_json_metadata)
+    return postingJsonMetadat.profile
+  } catch (err) {
+    console.log(err)
   }
 }
