@@ -1,22 +1,21 @@
 <template>
   <q-page class="flex flex-center">
-    <q-card class="q-pa-sm">
-      <div class="row-8 q-pa-sm">
-        <HiveUserSelect
-          label="Sending From"
-          :use-logged-in-user="true"
-          @hiveAccname="(msg) => (sendFrom = msg)"
-        />
-      </div>
-    </q-card>
-    <q-card>
-      <LogoTest :size="300" />
-      <LogoTest :size="100" />
-    </q-card>
-    <q-card
+    <div>
+      <HiveUserSelect
+        label="Testing Page Sending From"
+        :use-logged-in-user="false"
+        @hiveAccname="(msg) => (sendFrom = msg)"
+      />
+    </div>
+    <div v-if="false">
+      <q-card>
+        <LogoTest :size="300" />
+        <LogoTest :size="100" />
+      </q-card>
+      <q-card
       class="my-card text-white q-ma-lg"
       style="background: radial-gradient(circle, #35a2ff 0%, #014a88 100%)"
-    >
+      >
       <q-card-section>
         <div class="text-h6">{{ boxTitle }}</div>
         <div class="text-subtitle2">from v4v.app</div>
@@ -32,6 +31,7 @@
         {{ storeAPIStatus.apiStatus.crypto.fmt.hive }}<br />
       </q-card-section>
     </q-card>
+  </div>
   </q-page>
 </template>
 
