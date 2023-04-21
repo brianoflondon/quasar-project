@@ -41,7 +41,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
-import { useHiveAvatar } from 'src/use/useHiveAvatar'
+import { useHiveAvatar } from 'src/use/useHive'
 // This comes from https://github.com/ecency/hivescript
 import badActorList from '@hiveio/hivescript/bad-actors.json'
 import 'src/assets/hive-tx.min.js'

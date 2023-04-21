@@ -22,17 +22,15 @@
         </template>
       </q-select>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref , watch} from 'vue'
+import { ref, watch } from 'vue'
 
 const stringOptions = []
 const options = ref(stringOptions)
 const model = ref(null) // Hive Account Name
-
 
 // async function filterFn(val, update, abort) {
 //   // call abort() at any time if you can't retrieve data somehow
@@ -60,16 +58,18 @@ function abortFilterFn() {
   console.log('delayed filter aborted')
 }
 
-
 async function searchHiveUsernames(val) {
   console.log(val)
   if (val.length < 2) {
     return
   }
   try {
-    const res = await hiveTx.call('condenser_api.get_account_reputations', [val, 3])
+    const res = await hiveTx.call('condenser_api.get_account_reputations', [
+      val,
+      3,
+    ])
     console.log(res.result)
-    const accounts = res.result.map(el => el.account)
+    const accounts = res.result.map((el) => el.account)
     console.log(accounts)
     return accounts
   } catch (err) {

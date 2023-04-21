@@ -62,7 +62,7 @@ import { KeychainSDK } from 'keychain-sdk'
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
-import { useLoadHiveAvatar } from 'src/use/useHiveAvatar'
+import { useLoadHiveAvatar } from 'src/use/useHive'
 import { useQuasar } from 'quasar'
 import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 const $q = useQuasar()
