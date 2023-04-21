@@ -14,6 +14,7 @@ export default {
   keychain_missing: 'Keychain is Missing',
   reload_prices: 'Reload Prices',
 
+  // Transfer Screen
   sending: 'Sending',
   amount_to_send: 'Amount to Send',
   amount: 'Amount',
@@ -23,6 +24,7 @@ export default {
   from: 'from',
   From: 'From',
   no_results: 'No Results',
+  local_currency: 'USD',
 
   system_status_title: 'V4V.app System Status',
   system_status_intro: 'A big introduction to how the system works\nlorem ipsum dolor sit amet',

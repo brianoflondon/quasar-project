@@ -1,19 +1,31 @@
 <template>
   <q-page>
     <q-card class="q-pa-sm">
-      <div class="row-8 q-pa-sm">
-        <HiveUserPicker
-          :label="$t('sending') + ' ' + $t('from')"
-          :use-logged-in-user="true"
-          @hiveAccname="(msg) => (sendFrom = msg)"
-        />
+      <div class="row q-pa-sm destinations">
+        <div class="col-6 q-pr-sm">
+          <HiveUserPicker
+            :label="$t('sending') + ' ' + $t('from')"
+            :use-logged-in-user="true"
+            @hiveAccname="(msg) => (sendFrom = msg)"
+          />
+        </div>
+        <div class="col-6 q-pr-sm">
+          <HiveUserPicker
+            :label="$t('sending') + ' ' + $t('to')"
+            :use-logged-in-user="false"
+            @hiveAccname="(msg) => (sendTo = msg)"
+          />
+        </div>
       </div>
-      <div class="row-8 q-pa-sm">
-        <HiveUserPicker
-          :label="$t('sending') + ' ' + $t('to')"
-          :use-logged-in-user="false"
-          @hiveAccname="(msg) => (sendTo = msg)"
-        />
+      <div class="row q-pa-sm amount-buttons">
+        <div v-for="button in btnAmounts" :key="button.id" class="col q-pr-sm">
+          <q-btn
+            rounded
+            color="primary"
+            :label="tidyNumber(button)"
+            @click="amount = button"
+          />
+        </div>
       </div>
       <div class="row q-pa-sm">
         <div class="col-4 q-pr-sm">
@@ -27,7 +39,7 @@
             v-autofocus
           />
         </div>
-        <div class="col-6 q-pr-sm vertical-middle text-center">
+        <div class="col-6 q-pr-sm vertical-middle text-center currency-options">
           <q-option-group
             v-model="optionsSelected"
             :options="optionsCurrency"
@@ -47,57 +59,10 @@
             outlined
             :editable="false"
             :readonly="true"
-            :label="value.label + $t('amount')"
+            :label="value.label + ' ' + $t('amount')"
             stack-label
             tabindex="-1"
-          />
-        </div>
-      </div>
-
-      <div class="row q-pa-sm">
-        <div class="col q-pr-sm output-values">
-          <q-input
-            outlined
-            :editable="false"
-            :readonly="true"
-            v-model="hiveAmount"
-            label="Hive Amount:"
-            stack-label
-            tabindex="-1"
-          />
-        </div>
-        <div class="col q-pr-sm">
-          <q-input
-            outlined
-            :editable="false"
-            :readonly="true"
-            color="blue"
-            v-model="HBDAmount"
-            label="HBD Amount:"
-            stack-label
-            tabindex="-1"
-          />
-        </div>
-        <div class="col q-pr-sm">
-          <q-input
-            outlined
-            :editable="false"
-            :readonly="true"
-            v-model="satsAmount"
-            label="Sats Amount:"
-            stack-label
-            tabindex="-1"
-          />
-        </div>
-        <div class="col q-pr-sm">
-          <q-input
-            outlined
-            :editable="false"
-            :readonly="true"
-            v-model="USDAmount"
-            label="USD Amount:"
-            stack-label
-            tabindex="-1"
+            @click="copyToClipboard(allAmounts[key])"
           />
         </div>
       </div>
@@ -111,7 +76,7 @@
 </template>
 
 <script setup>
-import { defineComponent, ref, onMounted, computed } from 'vue'
+import { defineComponent, ref, watch, onMounted, computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { KeychainSDK } from 'keychain-sdk'
 import { useStoreUser } from 'src/stores/storeUser'
@@ -124,6 +89,11 @@ const storeAPIStatus = useStoreAPIStatus()
 
 const amount = ref('10')
 const memo = ref('')
+
+const btnAmountsNormal = [1, 10, 50, 100, 500, 1000, 5000]
+const btnAmountsSats = [5000, 10000, 25000, 50000, 100000, 250000]
+
+const btnAmounts = ref(btnAmountsNormal)
 
 const optionsCur = {
   HIVE: {
@@ -144,6 +114,11 @@ const optionsCur = {
   USD: {
     symbol: 'USD',
     label: 'USD',
+    amount: 0,
+  },
+  LOCAL: {
+    symbol: 'LOCAL',
+    label: 'Local',
     amount: 0,
   },
 }
@@ -187,7 +162,6 @@ const hiveAmount = computed(() => {
 })
 
 const allAmounts = computed(() => {
-  console.log(satsAmount.value)
   return {
     HIVE: Number(hiveAmount.value).toFixed(3),
     HBD: Number(hiveAmount.value * storeAPIStatus.hiveHBDNumber).toFixed(3),
@@ -195,6 +169,9 @@ const allAmounts = computed(() => {
       (hiveAmount.value * storeAPIStatus.hiveSatsNumber).toFixed(0)
     ),
     USD: tidyNumber(
+      (hiveAmount.value * storeAPIStatus.apiStatus.crypto.hive.usd).toFixed(2)
+    ),
+    LOCAL: tidyNumber(
       (hiveAmount.value * storeAPIStatus.apiStatus.crypto.hive.usd).toFixed(2)
     ),
   }
@@ -225,6 +202,24 @@ function tidyNumber(x) {
     return null
   }
 }
+
+async function copyToClipboard(value) {
+  try {
+    await navigator.clipboard.writeText(value)
+    console.log('Value copied to clipboard:', value)
+  } catch (error) {
+    console.error('Failed to copy value to clipboard:', error)
+  }
+}
+
+watch(optionsSelected, () => {
+  console.log('optionSelected', optionsSelected.value)
+  if (optionsSelected.value === 'sats') {
+    btnAmounts.value = btnAmountsSats
+  } else {
+    btnAmounts.value = btnAmountsNormal
+  }
+})
 
 async function sendTransfer() {
   try {
