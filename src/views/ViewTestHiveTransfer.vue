@@ -41,7 +41,21 @@
         </div>
       </div>
       <div class="row q-pa-sm">
-        <div class="col-3 q-pr-sm output-values">
+        <div class="col q-pr-sm" v-for="(value, key) in optionsCur" :key="key">
+          <q-input
+            v-model="allAmounts[key]"
+            outlined
+            :editable="false"
+            :readonly="true"
+            :label="value.label + $t('amount')"
+            stack-label
+            tabindex="-1"
+          />
+        </div>
+      </div>
+
+      <div class="row q-pa-sm">
+        <div class="col q-pr-sm output-values">
           <q-input
             outlined
             :editable="false"
@@ -52,7 +66,7 @@
             tabindex="-1"
           />
         </div>
-        <div class="col-3 q-pr-sm">
+        <div class="col q-pr-sm">
           <q-input
             outlined
             :editable="false"
@@ -64,7 +78,7 @@
             tabindex="-1"
           />
         </div>
-        <div class="col-3 q-pr-sm">
+        <div class="col q-pr-sm">
           <q-input
             outlined
             :editable="false"
@@ -75,7 +89,7 @@
             tabindex="-1"
           />
         </div>
-        <div class="col-3 q-pr-sm">
+        <div class="col q-pr-sm">
           <q-input
             outlined
             :editable="false"
@@ -111,28 +125,33 @@ const storeAPIStatus = useStoreAPIStatus()
 const amount = ref('10')
 const memo = ref('')
 
-const optionsCurrency = [
-  {
+const optionsCur = {
+  HIVE: {
+    symbol: 'HIVE',
     label: 'Hive',
-    value: 'HIVE',
+    amount: 0,
   },
-  {
+  HBD: {
+    symbol: 'HBD',
     label: 'HBD',
-    value: 'HBD',
+    amount: 0,
   },
-  {
+  sats: {
+    symbol: 'sats',
     label: 'Sats',
-    value: 'sats',
+    amount: 0,
   },
-  {
-    label: 'BTC',
-    value: 'BTC',
-  },
-  {
+  USD: {
+    symbol: 'USD',
     label: 'USD',
-    value: 'USD',
+    amount: 0,
   },
-]
+}
+const optionsCurrency = Object.entries(optionsCur).map(([key, value]) => ({
+  label: value.label,
+  value: key,
+}))
+console.log(optionsCurrency)
 
 const optionsSelected = ref('HIVE')
 
@@ -145,25 +164,40 @@ const sendTo = ref('brianoflondon')
 
 const hiveAmount = computed(() => {
   console.log(optionsSelected.value)
+  let answer = 0
   if (optionsSelected.value === 'HIVE') {
-    return Number(amount.value).toFixed(3)
+    answer = Number(amount.value).toFixed(3)
   }
   if (optionsSelected.value === 'HBD') {
-    return Number(amount.value / storeAPIStatus.hiveHBDNumber).toFixed(3)
+    answer = Number(amount.value / storeAPIStatus.hiveHBDNumber).toFixed(3)
   }
   if (optionsSelected.value === 'sats') {
-    return Number(amount.value / storeAPIStatus.hiveSatsNumber).toFixed(3)
+    answer = Number(amount.value / storeAPIStatus.hiveSatsNumber).toFixed(3)
   }
   if (optionsSelected.value === 'BTC') {
-    return Number(amount.value / storeAPIStatus.hiveBTCNumber).toFixed(3)
+    answer = Number(amount.value / storeAPIStatus.hiveBTCNumber).toFixed(3)
   }
   if (optionsSelected.value === 'USD') {
     console.log(storeAPIStatus.apiStatus.crypto.hive.usd)
-    return Number(
+    answer = Number(
       amount.value / storeAPIStatus.apiStatus.crypto.hive.usd
     ).toFixed(3)
   }
-  return 99
+  return answer
+})
+
+const allAmounts = computed(() => {
+  console.log(satsAmount.value)
+  return {
+    HIVE: Number(hiveAmount.value).toFixed(3),
+    HBD: Number(hiveAmount.value * storeAPIStatus.hiveHBDNumber).toFixed(3),
+    sats: tidyNumber(
+      (hiveAmount.value * storeAPIStatus.hiveSatsNumber).toFixed(0)
+    ),
+    USD: tidyNumber(
+      (hiveAmount.value * storeAPIStatus.apiStatus.crypto.hive.usd).toFixed(2)
+    ),
+  }
 })
 
 const HBDAmount = computed(() => {

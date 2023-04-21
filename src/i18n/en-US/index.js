@@ -14,6 +14,7 @@ export default {
   keychain_missing: 'Keychain is Missing',
   reload_prices: 'Reload Prices',
 
+  sending: 'Sending',
   amount_to_send: 'Amount to Send',
   amount: 'Amount',
   send: 'Send',
