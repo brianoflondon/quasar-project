@@ -116,18 +116,16 @@ const optionsCur = {
     label: 'USD',
     amount: 0,
   },
-  LOCAL: {
-    symbol: 'LOCAL',
-    label: 'Local',
-    amount: 0,
-  },
 }
 const optionsCurrency = Object.entries(optionsCur).map(([key, value]) => ({
   label: value.label,
   value: key,
 }))
 console.log(optionsCurrency)
-
+console.log('env', import.meta.env.api_url)
+if (process.env.DEV) {
+  console.log(`I'm on a development build`)
+}
 const optionsSelected = ref('HIVE')
 
 defineComponent({
