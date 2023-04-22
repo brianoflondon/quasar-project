@@ -62,7 +62,7 @@
             :label="value.label + ' ' + $t('amount')"
             stack-label
             tabindex="-1"
-            @click="copyToClipboard(allAmounts[key])"
+            @click="copyNumToClipboard(allAmounts[key])"
           />
         </div>
       </div>
@@ -201,10 +201,11 @@ function tidyNumber(x) {
   }
 }
 
-async function copyToClipboard(value) {
+async function copyNumToClipboard(value) {
   try {
-    await navigator.clipboard.writeText(value)
-    console.log('Value copied to clipboard:', value)
+    const valueNumber = parseFloat(value.replace(/,/g, ''))
+    await navigator.clipboard.writeText(valueNumber)
+    console.log('Value copied to clipboard:',value, valueNumber)
   } catch (error) {
     console.error('Failed to copy value to clipboard:', error)
   }

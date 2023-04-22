@@ -63,7 +63,7 @@ import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useLoadHiveAvatar } from 'src/use/useHive'
-import { useQuasar } from 'quasar'
+import { useQuasar, useMeta } from 'quasar'
 import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
@@ -133,6 +133,31 @@ async function login() {
     storeUser.hiveAccname = keychainParams.value.data.username
     storeUser.login(keychainParams.value.data.username, keySelected.value)
     $q.notify(`User ${keychainParams.value.data.username} logged in`)
+    // add Meta tags for Alby
+    storeUser.getHiveProfile()
+    albyNameContent = storeUser.hiveProfile
+      ? storeUser.hiveProfile.name
+      : storeUser.hiveAccname
+    console.log('albyNameContent', albyNameContent)
+    albyImageContent = storeUser.profileImageUrl
+    albyLightningContent = `${storeUser.hiveAccname}@v4v.app`
+    const metaData = {
+      meta: {
+        albyName: {
+          name: 'alby:name',
+          content: albyNameContent,
+        },
+        albyImage: {
+          name: 'alby:image',
+          content: albyImageContent,
+        },
+        property: {
+          name: 'lightning',
+          content: albyLightningContent,
+        },
+      },
+    }
+    useMeta(metaData)
   } catch (error) {
     console.log('❌ failure')
     console.log({ error })
