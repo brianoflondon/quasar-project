@@ -20,6 +20,7 @@
           <HiveUserSelect
             :label="sendTo ? sendTo : $t('sending') + ' ' + $t('to')"
             :use-logged-in-user="false"
+            :pre-filled="sendTo ? sendTo : ''"
             @hiveProfile="
               (hiveProfile) =>
                 hiveProfile
@@ -146,7 +147,7 @@ defineComponent({
 })
 
 const sendFrom = ref('')
-const sendTo = ref('brianoflondon')
+const sendTo = ref('')
 
 const hiveAmount = computed(() => {
   console.log(optionsSelected.value)

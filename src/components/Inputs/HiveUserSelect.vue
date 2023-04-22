@@ -10,12 +10,6 @@
       hide-selected
       fill-input
       use-input
-      :rules="[
-        (val) =>
-          /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/.test(
-            val
-          ) || 'Not a valid Hive username',
-      ]"
       v-model="input"
       :options="usernameSuggestions"
       @filter="filterFn"
@@ -58,7 +52,7 @@
 </template>
 
 <script setup>
-import { h, ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import {
   useHiveProfile,
@@ -68,13 +62,7 @@ import {
 import HiveProfileTestCard from 'src/components/Display/HiveProfileTestCard.vue'
 import badActorList from '@hiveio/hivescript/bad-actors.json'
 
-const staticSuggestions = [
-  'brianoflondon',
-  'hivehydra',
-  'v4vapp',
-  'v4vapp.tre',
-  'v4vapp.dhf',
-]
+const staticSuggestions = []
 
 const storeUser = useStoreUser()
 const input = ref('')
@@ -95,6 +83,10 @@ const props = defineProps({
   useLoggedInUser: {
     type: Boolean,
     default: false,
+  },
+  preFilled: {
+    type: String,
+    default: '',
   },
   // Show Testing information
   testing: {
@@ -122,9 +114,21 @@ watch(
   }
 )
 
-if (props.useLoggedInUser && storeUser.isLoggedIn) {
-  input.value = storeUser.hiveAccname
-}
+onMounted(async () => {
+  if (props.useLoggedInUser && storeUser.isLoggedIn) {
+    usernameSuggestions.value = [storeUser.hiveAccname]
+    input.value = storeUser.hiveAccname
+    selected.value = input.value
+    await updateHiveProfile()
+    emits('hiveProfile', hiveProfile.value)
+  } else if (props.preFilled) {
+    usernameSuggestions.value = [props.preFilled]
+    input.value = props.preFilled
+    selected.value = input.value
+    await updateHiveProfile()
+    emits('hiveProfile', hiveProfile.value)
+  }
+})
 
 console.log('----------------------- HiveUserSelect -----------------------')
 
