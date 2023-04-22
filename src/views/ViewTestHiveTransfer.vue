@@ -3,17 +3,19 @@
     <q-card class="q-pa-sm">
       <div class="row q-pa-sm destinations">
         <div class="col-6 q-pr-sm">
-          <HiveUserPicker
-            :label="$t('sending') + ' ' + $t('from')"
+          <HiveUserSelect
+            :label="$t('sending') + ' ' + $t('from') + ' ' + sendFrom"
             :use-logged-in-user="true"
-            @hiveAccname="(msg) => (sendFrom = msg)"
+            @hiveProfile="
+              (hiveProfile) => (sendFrom = hiveProfile.hive_accname)
+            "
           />
         </div>
         <div class="col-6 q-pr-sm">
-          <HiveUserPicker
-            :label="$t('sending') + ' ' + $t('to')"
+          <HiveUserSelect
+            :label="$t('sending') + ' ' + $t('to') + ' ' + sendTo"
             :use-logged-in-user="false"
-            @hiveAccname="(msg) => (sendTo = msg)"
+            @hiveProfile="(hiveProfile) => (sendTo = hiveProfile.hive_accname)"
           />
         </div>
       </div>
@@ -82,6 +84,7 @@ import { KeychainSDK } from 'keychain-sdk'
 import { useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
+import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
 
 const $q = useQuasar()
 const storeUser = useStoreUser()
@@ -175,22 +178,6 @@ const allAmounts = computed(() => {
   }
 })
 
-const HBDAmount = computed(() => {
-  return Number(hiveAmount.value * storeAPIStatus.hiveHBDNumber).toFixed(3)
-})
-
-const satsAmount = computed(() => {
-  return tidyNumber(
-    (hiveAmount.value * storeAPIStatus.hiveSatsNumber).toFixed(0)
-  )
-})
-
-const USDAmount = computed(() => {
-  return tidyNumber(
-    (hiveAmount.value * storeAPIStatus.apiStatus.crypto.hive.usd).toFixed(2)
-  )
-})
-
 function tidyNumber(x) {
   if (x) {
     const parts = x.toString().split('.')
@@ -205,7 +192,7 @@ async function copyNumToClipboard(value) {
   try {
     const valueNumber = parseFloat(value.replace(/,/g, ''))
     await navigator.clipboard.writeText(valueNumber)
-    console.log('Value copied to clipboard:',value, valueNumber)
+    console.log('Value copied to clipboard:', value, valueNumber)
   } catch (error) {
     console.error('Failed to copy value to clipboard:', error)
   }

@@ -7,7 +7,7 @@ export default boot(({ app }) => {
     locale: 'en-US',
     globalInjection: true,
     legacy: false,
-    messages
+    messages,
   })
 
   // Set i18n instance on app

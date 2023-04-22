@@ -1,6 +1,8 @@
 import { axios } from 'boot/axios'
 
 export function useHiveAvatar(username, size = 'medium') {
+  // Used the Hive.blog image service to get the avatar for a Hive account
+  
   if (!username) {
     return 'avatars/unkown_hive_user.png'
   }
@@ -9,7 +11,7 @@ export function useHiveAvatar(username, size = 'medium') {
       /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/
     const validName = username.match(re)
     if (validName) {
-      return 'https://images.hive.blog/u/' + username + '/avatar/'+size
+      return 'https://images.hive.blog/u/' + username + '/avatar/' + size
     } else {
       return ''
     }
@@ -40,10 +42,22 @@ export async function useLoadHiveAvatar(username) {
 
 export async function useHiveProfile(hiveAccname) {
   try {
+    if (!hiveAccname) {
+      return
+    }
+    let postingJsonMetadata = {}
     const res = await hiveTx.call('condenser_api.get_accounts', [[hiveAccname]])
-    let postingJsonMetadata = JSON.parse(res.result[0].posting_json_metadata)
-    postingJsonMetadata.profile['hive_accname'] = hiveAccname
-    return postingJsonMetadata.profile
+    if (res.result[0]) {
+      // resJson = JSON.parse(res.result[0])
+      if (res.result[0]['posting_json_metadata']) {
+        postingJsonMetadata = JSON.parse(res.result[0].posting_json_metadata)
+        postingJsonMetadata.profile['hive_accname'] = hiveAccname
+        return postingJsonMetadata.profile
+      } else {
+        return { name: hiveAccname, hive_accname: hiveAccname }
+      }
+    }
+    console.log('no profile found')
   } catch (err) {
     console.log(err)
   }

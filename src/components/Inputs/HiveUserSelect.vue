@@ -10,6 +10,12 @@
       hide-selected
       fill-input
       use-input
+      :rules="[
+        (val) =>
+          /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/.test(
+            val
+          ) || 'Not a valid Hive username',
+      ]"
       v-model="input"
       :options="usernameSuggestions"
       @filter="filterFn"
@@ -53,7 +59,7 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { h, ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import {
   useHiveProfile,
@@ -79,7 +85,6 @@ const fullName = ref('')
 const hiveProfile = ref({})
 const hiveAvatar = ref(useHiveAvatar(''))
 const badActors = ref(badActorList)
-let vscrollAcc = null
 
 const props = defineProps({
   // Label for the input
@@ -114,10 +119,6 @@ watch(
     } catch (e) {
       console.log('updateHiveProfile error', e)
     }
-    // payload = {
-    //   username,
-    //   fullName: fullName.value,
-    // }
     emits('hiveProfile', hiveProfile.value)
   }
 )
@@ -133,13 +134,11 @@ async function vScroll(val) {
   selected.value = usernameSuggestions.value[val.index]
   if (usernameSuggestions.value.length === 1) {
     input.value = selected.value
+    await updateHiveProfile()
+    emits('hiveProfile', hiveProfile.value)
   }
   hiveAvatar.value = useHiveAvatar(selected.value)
   console.log('selectedUser', selected.value)
-}
-
-async function checkInput() {
-  console.log('checkInput', input.value)
 }
 
 async function updateHiveProfile() {
@@ -185,17 +184,6 @@ function clearInput() {
 function resetSuggestions() {
   usernameSuggestions.value = staticSuggestions
 }
-
-// filterFn (val, update, abort) {
-//   if (val.length < 2) {
-//     abort()
-//     return
-//   }
-
-//   update(() => {
-//     const needle = val.toLowerCase()
-//     options.value = stringOptions.filter(v => v.toLowerCase().indexOf(needle) > -1)
-//   })
 </script>
 
 <style lang="sass" scoped>

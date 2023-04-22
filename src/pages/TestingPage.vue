@@ -4,9 +4,9 @@
       <div class="flex-top">
         <q-toggle v-model="testing" />
       </div>
-      <div class="flex-top">Parent: {{ hiveProfile.name }}</div>
+      <div class="flex-top">Parent: {{ hiveProfile?.name }}</div>
       <HiveUserSelect
-        label="Testing Page Sending From"
+        :label="label"
         :use-logged-in-user="false"
         :testing="testing"
         @hiveProfile="recvHiveProfile"
@@ -49,7 +49,9 @@ import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
 import LogoTest from 'src/components/LogoTest.vue'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
+import { useI18n } from 'vue-i18n'
 const storeAPIStatus = useStoreAPIStatus()
+
 storeAPIStatus.update()
 
 defineComponent({
@@ -62,11 +64,27 @@ const host = ref(window.location.hostname)
 const testing = ref(false)
 const accName = ref('')
 const hiveProfile = ref({})
+// How to use i18n in a script setup
+const baseLabel = useI18n().t('sending')
+const label = ref(baseLabel)
 
 function recvHiveProfile(object) {
-  hiveProfile.value = object
-  console.log('hiveProfile', hiveProfile.value)
-  console.log(hiveProfile.value.hive_accname)
+  console.log('recvHiveProfile', object)
+  if (object) {
+    hiveProfile.value = object
+    console.log('hiveProfile', hiveProfile.value)
+    label.value =
+      baseLabel +
+      ' -> ' +
+      hiveProfile?.value?.name +
+      ' (@' +
+      hiveProfile?.value?.hive_accname +
+      ')'
+  } else {
+    hiveProfile.value = {}
+    label.value = baseLabel
+    console.log(label.value)
+  }
 }
 
 console.log(accName)
