@@ -22,7 +22,6 @@
       @virtual-scroll="vScroll"
       @keyup.esc="clearInput"
       @keyup.backspace="resetSuggestions"
-      style="width: 400px; padding-bottom: 32px"
     >
       <!--
         hint="Minimum 2 characters to trigger filtering"

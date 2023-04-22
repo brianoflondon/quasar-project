@@ -3,19 +3,29 @@
     <q-card class="q-pa-sm">
       <div class="row q-pa-sm destinations">
         <div class="col-6 q-pr-sm">
+          {{ $t('sending') + ' ' + $t('from') }}
           <HiveUserSelect
-            :label="$t('sending') + ' ' + $t('from') + ' ' + sendFrom"
+            :label="sendFrom ? sendFrom : $t('sending') + ' ' + $t('from')"
             :use-logged-in-user="true"
             @hiveProfile="
-              (hiveProfile) => (sendFrom = hiveProfile.hive_accname)
+              (hiveProfile) =>
+                hiveProfile
+                  ? (sendFrom = hiveProfile.hive_accname)
+                  : (sendFrom = '')
             "
           />
         </div>
         <div class="col-6 q-pr-sm">
+          {{ $t('sending') + ' ' + $t('to') }}
           <HiveUserSelect
-            :label="$t('sending') + ' ' + $t('to') + ' ' + sendTo"
+            :label="sendTo ? sendTo : $t('sending') + ' ' + $t('to')"
             :use-logged-in-user="false"
-            @hiveProfile="(hiveProfile) => (sendTo = hiveProfile.hive_accname)"
+            @hiveProfile="
+              (hiveProfile) =>
+                hiveProfile
+                  ? (sendTo = hiveProfile.hive_accname)
+                  : (sendTo = '')
+            "
           />
         </div>
       </div>
