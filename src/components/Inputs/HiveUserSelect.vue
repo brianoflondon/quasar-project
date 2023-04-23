@@ -11,7 +11,7 @@
       fill-input
       emit-value
       use-input
-      :model-value="input"
+      :model-value="model"
       :options="usernameSuggestions"
       @input-value="inputValueFn"
       @focus="focusFn"
@@ -41,9 +41,9 @@
   <div v-if="testing">
     <div v-if="hiveProfile">
       <HiveProfileTestCard :hiveProfile="hiveProfile" />
-      <pre>Input:    |{{ input }}|</pre>
-      <pre>Selected: |{{ selected }}|</pre>
-      <pre>Fullname: |{{ fullName }}|</pre>
+      <pre>Input Model: |{{ model }}|</pre>
+      <pre>Selected:    |{{ selected }}|</pre>
+      <pre>Fullname:    |{{ fullName }}|</pre>
       <pre>{{ usernameSuggestions }}</pre>
       <ul>
         <li v-for="(value, key) in hiveProfile" :key="key">
@@ -68,7 +68,7 @@ import badActorList from '@hiveio/hivescript/bad-actors.json'
 const staticSuggestions = []
 
 const storeUser = useStoreUser()
-const input = ref('')
+const model = ref('')
 const usernameSuggestions = ref(staticSuggestions)
 const selected = ref('')
 const fullName = ref('')
@@ -100,36 +100,47 @@ const props = defineProps({
 
 const emits = defineEmits(['hiveProfile'])
 
-watch(
-  function () {
-    console.log('watch: input.value', input.value)
-    if (selected.value) {
-      if (!input.value) {
-        input.value = selected.value
-      }
-    }
-    return input.value
-  },
-  async function (username) {
-    console.log('input.value ---->', username)
-    if (!username) {
-      clearInput()
-    }
-    console.log('input.value ---->', username)
-    try {
-      await updateHiveProfile(username)
-    } catch (e) {
-      console.log('updateHiveProfile error', e)
-    }
-    emits('hiveProfile', hiveProfile.value)
+watch(model, async (newModel, oldModel) => {
+  console.log('watching model new', newModel)
+  console.log('watching model old', oldModel)
+  if (!newModel && oldModel) {
+    console.log('model is empty')
+    model.value = oldModel
+    selected.value = oldModel
+    await updateHiveProfile(oldModel)
   }
-)
+})
+
+// watch(
+//   function () {
+//     console.log('watch: model.value', model.value)
+//     if (selected.value) {
+//       if (!model.value) {
+//         model.value = selected.value
+//       }
+//     }
+//     return model.value
+//   },
+//   async function (username) {
+//     console.log('input.value ---->', username)
+//     if (!username) {
+//       clearInput()
+//     }
+//     console.log('input.value ---->', username)
+//     try {
+//       await updateHiveProfile(username)
+//     } catch (e) {
+//       console.log('updateHiveProfile error', e)
+//     }
+//     emits('hiveProfile', hiveProfile.value)
+//   }
+// )
 
 function inputValueFn(val) {
   console.log('inputValueFn')
   console.log('inputValueFn val', val)
   if (!val) {
-    input.value = selected.value
+    model.value = selected.value
   }
 }
 
@@ -141,14 +152,14 @@ onBeforeMount(async () => {
   console.log('onBeforeMount')
   if (props.useLoggedInUser && storeUser.isLoggedIn) {
     usernameSuggestions.value = [storeUser.hiveAccname]
-    input.value = storeUser.hiveAccname
-    selected.value = input.value
+    model.value = storeUser.hiveAccname
+    selected.value = model.value
     await updateHiveProfile()
     emits('hiveProfile', hiveProfile.value)
   } else if (props.preFilled) {
     usernameSuggestions.value = [props.preFilled]
-    input.value = props.preFilled
-    selected.value = input.value
+    model.value = props.preFilled
+    selected.value = model.value
     await updateHiveProfile()
     emits('hiveProfile', hiveProfile.value)
   }
@@ -160,7 +171,7 @@ async function vScroll(val) {
   console.log('vScroll', val)
   selected.value = usernameSuggestions.value[val.index]
   if (usernameSuggestions.value.length === 1) {
-    input.value = selected.value
+    model.value = selected.value
     await updateHiveProfile()
     emits('hiveProfile', hiveProfile.value)
   }
@@ -185,7 +196,7 @@ async function filterFn(val, update, abort) {
   }
   const needle = val.toLowerCase().trim()
   usernameSuggestions.value = await useLoadHiveAccountsReputation(needle)
-  console.log('filterFn input', input.value)
+  console.log('filterFn input', model.value)
   console.log('filterFn val', val)
   update(() => {
     console.log('needle', needle)
@@ -202,12 +213,13 @@ const vAutofocus = {
 }
 
 function clearInput() {
-  input.value = ''
+  model.value = ''
   selected.value = ''
   fullName.value = ''
   hiveProfile.value = {}
   hiveAvatar.value = useHiveAvatar('')
   resetSuggestions()
+  emits('hiveProfile', hiveProfile.value)
 }
 
 function resetSuggestions() {
