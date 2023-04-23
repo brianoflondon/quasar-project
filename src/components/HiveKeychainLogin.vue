@@ -12,18 +12,18 @@
           v-model="keychainParams.data.username"
           label="Hive Account"
         >
-          <template v-slot:prepend>
-            <q-icon name="fa-brands fa-hive" color="orange" />
-          </template>
+        <template v-slot:prepend>
+          <q-avatar size="md">
+            <q-img
+              :src="inputAvatar"
+              @error="handleImageError"
+              spinner="bars"
+              loading="lazy"
+            />
+          </q-avatar>
+        </template>
           <template v-slot:append>
-            <q-avatar size="md">
-              <q-img
-                :src="inputAvatar"
-                @error="handleImageError"
-                spinner="bars"
-                loading="lazy"
-              />
-            </q-avatar>
+            <q-icon name="fa-brands fa-hive" color="orange" />
           </template>
         </q-input>
         <HiveUserSelect
@@ -101,6 +101,7 @@ let timeoutId = null
 watch(
   () => keychainParams.value.data.username,
   async (username) => {
+    if(!username) return
     keychainParams.value.data.username = username.toLowerCase().trim()
     storeUser.isLoggedIn = false
     // Timeout function used to stop excessive calls to missing avatars
@@ -142,13 +143,14 @@ async function login() {
     storeUser.login(keychainParams.value.data.username, keySelected.value)
     $q.notify(`User ${keychainParams.value.data.username} logged in`)
     // add Meta tags for Alby
+    console.log('alby')
     storeUser.getHiveProfile()
-    albyNameContent = storeUser.hiveProfile
+    const albyNameContent = storeUser.hiveProfile
       ? storeUser.hiveProfile.name
       : storeUser.hiveAccname
     console.log('albyNameContent', albyNameContent)
-    albyImageContent = storeUser.profileImageUrl
-    albyLightningContent = `${storeUser.hiveAccname}@v4v.app`
+    const albyImageContent = storeUser.profileImageUrl
+    const albyLightningContent = `${storeUser.hiveAccname}@v4v.app`
     const metaData = {
       meta: {
         albyName: {
@@ -162,6 +164,10 @@ async function login() {
         property: {
           name: 'lightning',
           content: albyLightningContent,
+        },
+        description: {
+          name: 'description',
+          content: `Hive User ${storeUser.hiveAccname} is using V4V.app`,
         },
       },
     }

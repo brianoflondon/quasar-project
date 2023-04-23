@@ -1,4 +1,4 @@
-import { axios } from 'boot/axios'
+import { axios, apiURL } from 'boot/axios'
 import { Dark } from 'quasar'
 
 const useHiveAccountRegex =
@@ -8,14 +8,15 @@ export function useHiveAvatar(username, size = 'medium') {
   // Used the Hive.blog image service to get the avatar for a Hive account
   // Returns null if the username is blank or not a valid name.
   if (!username || !username.match(useHiveAccountRegex)) {
-    console.log('Is dark active: ',Dark.isActive)
+    console.log('Is dark active: ', Dark.isActive)
     if (Dark.isActive) {
       return 'avatars/hive_logo_dark.svg'
     } else {
       return 'avatars/hive_logo_light.svg'
     }
   }
-  return 'https://images.hive.blog/u/' + username + '/avatar/' + size
+  console.log(apiURL + '/hive/avatar/' + username + '/' + size)
+  return apiURL + '/hive/avatar/' + username + '/' + size
 }
 
 export async function useLoadHiveAvatar(username) {

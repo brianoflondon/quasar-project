@@ -17,6 +17,7 @@
       @filter="filterFn"
       @virtual-scroll="vScroll"
       @keyup.esc="clearInput"
+      @clear="clearInput"
       @keyup.backspace="resetSuggestions"
     >
       <!--
@@ -74,6 +75,7 @@ const fullName = ref('')
 const hiveProfile = ref({})
 const hiveAvatar = ref(useHiveAvatar(''))
 const badActors = ref(badActorList)
+let clearingInput = false // used as a flag to allow deliberate clearing of the input
 
 const props = defineProps({
   // Label for the input
@@ -102,12 +104,19 @@ const emits = defineEmits(['hiveProfile'])
 watch(model, async (newModel, oldModel) => {
   console.log('watching model new', newModel)
   console.log('watching model old', oldModel)
+  console.log('selected.value is ', selected.value)
+  console.log('clearingInput is ', clearingInput)
+  if (clearingInput) {
+    console.log('clearingInput is true')
+    return
+  }
   if (!newModel && oldModel) {
     console.log('model is empty')
     model.value = oldModel
     selected.value = oldModel
     await updateHiveProfile(oldModel)
   }
+  clearingInput = false
 })
 
 // watch(
@@ -187,7 +196,7 @@ async function filterFn(val, update, abort) {
   if (val.length < 2) {
     abort()
     if (val.length === 0) {
-      clearInput()
+      console.log('filterFn with Val length 0')
     }
     return
   }
@@ -214,6 +223,8 @@ const vAutofocus = {
 }
 
 function clearInput() {
+  console.log('clearInput')
+  clearingInput = true
   model.value = ''
   selected.value = ''
   fullName.value = ''
@@ -222,6 +233,7 @@ function clearInput() {
   resetSuggestions()
   emits('hiveProfile', hiveProfile.value)
 }
+
 
 function resetSuggestions() {
   usernameSuggestions.value = staticSuggestions

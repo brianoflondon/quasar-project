@@ -2,7 +2,7 @@
   <q-page>
     <q-card class="q-pa-sm">
       <div class="row q-pa-sm destinations">
-        <div class="col-6 q-pr-sm">
+        <div class="col-6 q-pr-sm v4vapp-sending-from">
           {{ $t('sending') + ' ' + $t('from') }}
           <HiveUserSelect
             :label="sendFrom ? sendFrom : $t('sending') + ' ' + $t('from')"
@@ -15,7 +15,7 @@
             "
           />
         </div>
-        <div class="col-6 q-pr-sm">
+        <div class="col-6 q-pr-sm v4vapp-sending-to">
           {{ $t('sending') + ' ' + $t('to') }}
           <HiveUserSelect
             :label="sendTo ? sendTo : $t('sending') + ' ' + $t('to')"
@@ -37,6 +37,7 @@
             color="primary"
             :label="tidyNumber(button)"
             @click="amount = button"
+            tabindex="-1"
           />
         </div>
       </div>
