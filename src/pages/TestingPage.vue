@@ -4,7 +4,7 @@
       <div class="flex-top">
         <q-toggle v-model="testing" />
       </div>
-      <div class="flex-top">Parent: {{ hiveProfile?.name }}</div>
+      <div class="flex-top">Parent: {{ hiveProfile?.name }} @{{ hiveProfile?.hive_accname }}</div>
       <keep-alive>
         <HiveUserSelect
           :label="label"

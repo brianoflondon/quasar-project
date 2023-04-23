@@ -6,14 +6,13 @@
       :multiple="false"
       clearable
       filled
-      input-debounce="100"
+      input-debounce="300"
       hide-selected
       fill-input
       emit-value
       use-input
       :model-value="model"
       :options="usernameSuggestions"
-      @input-value="inputValueFn"
       @focus="focusFn"
       @filter="filterFn"
       @virtual-scroll="vScroll"
@@ -169,14 +168,11 @@ console.log('----------------------- HiveUserSelect -----------------------')
 
 async function vScroll(val) {
   console.log('vScroll', val)
-  selected.value = usernameSuggestions.value[val.index]
-  if (usernameSuggestions.value.length === 1) {
-    model.value = selected.value
-    await updateHiveProfile()
-    emits('hiveProfile', hiveProfile.value)
-  }
   hiveAvatar.value = useHiveAvatar(selected.value)
-  console.log('selectedUser', selected.value)
+  selected.value = usernameSuggestions.value[val.index]
+  model.value = selected.value
+  await updateHiveProfile()
+  // emits('hiveProfile', hiveProfile.value)
 }
 
 async function updateHiveProfile() {
@@ -184,6 +180,7 @@ async function updateHiveProfile() {
   fullName.value = hiveProfile.value.name
   hiveAvatar.value = useHiveAvatar(selected.value)
   console.log('fullName', fullName.value)
+  emits('hiveProfile', hiveProfile.value)
 }
 
 async function filterFn(val, update, abort) {
@@ -194,12 +191,16 @@ async function filterFn(val, update, abort) {
     }
     return
   }
-  const needle = val.toLowerCase().trim()
+  const needle = val.toLowerCase().replace(/\s/g, '').trim()
   usernameSuggestions.value = await useLoadHiveAccountsReputation(needle)
+
+  console.log('needle', needle)
   console.log('filterFn input', model.value)
   console.log('filterFn val', val)
-  update(() => {
-    console.log('needle', needle)
+  console.log('usernameSuggestions', usernameSuggestions.value)
+  update(async () => {
+    const needle = val.toLowerCase().replace(/\s/g, '').trim()
+    usernameSuggestions.value = await useLoadHiveAccountsReputation(needle)
     usernameSuggestions.value = usernameSuggestions.value.filter(
       (v) => v.toLowerCase().indexOf(needle) > -1
     )
