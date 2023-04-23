@@ -5,10 +5,9 @@
       {{ keySelected }} Key
     </div>
     <div v-if="!storeUser.isLoggedIn">▪️ Not Logged In</div>
-
     <div class="row">
       <div class="col q-pa-sm vertical-middle">
-        <q-input
+        <q-input class="v4v-simple-hiveaccount-input"
           outlined
           v-model="keychainParams.data.username"
           label="Hive Account"
@@ -27,7 +26,16 @@
             </q-avatar>
           </template>
         </q-input>
-        <HiveUserPicker />
+        <HiveUserSelect
+          label="Login:"
+          :use-logged-in-user="false"
+          @hiveProfile="
+            (hiveProfile) =>
+              hiveProfile
+                ? (keychainParams.data.username = hiveProfile.hive_accname)
+                : (keychainParams.data.username = '')
+          "
+        />
       </div>
       <div class="col-2 q-pa-sm vertical-middle">
         <q-btn class="vertical-middle" rounded @click="login">Login</q-btn>
@@ -64,7 +72,7 @@ import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useLoadHiveAvatar } from 'src/use/useHive'
 import { useQuasar, useMeta } from 'quasar'
-import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
+import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
 const storeUser = useStoreUser()
@@ -129,7 +137,7 @@ async function login() {
       keychainParams.value.options
     )
     keychainError.value = ''
-    console.log('✅ success')
+    console.log('✅ success', login)
     storeUser.hiveAccname = keychainParams.value.data.username
     storeUser.login(keychainParams.value.data.username, keySelected.value)
     $q.notify(`User ${keychainParams.value.data.username} logged in`)

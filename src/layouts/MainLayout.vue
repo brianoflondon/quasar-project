@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header header-bar elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -200,3 +200,9 @@ onMounted(() => {
   // clearAllStorage()
 })
 </script>
+
+
+<style lang="scss">
+
+
+</style>

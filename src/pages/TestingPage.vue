@@ -5,12 +5,14 @@
         <q-toggle v-model="testing" />
       </div>
       <div class="flex-top">Parent: {{ hiveProfile?.name }}</div>
-      <HiveUserSelect
-        :label="label"
-        :use-logged-in-user="false"
-        :testing="testing"
-        @hiveProfile="recvHiveProfile"
-      />
+      <keep-alive>
+        <HiveUserSelect
+          :label="label"
+          :use-logged-in-user="false"
+          :testing="testing"
+          @hiveProfile="recvHiveProfile"
+        />
+      </keep-alive>
     </div>
 
     <div v-if="false">

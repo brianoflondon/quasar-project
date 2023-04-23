@@ -9,9 +9,12 @@
       input-debounce="100"
       hide-selected
       fill-input
+      emit-value
       use-input
-      v-model="input"
+      :model-value="input"
       :options="usernameSuggestions"
+      @input-value="inputValueFn"
+      @focus="focusFn"
       @filter="filterFn"
       @virtual-scroll="vScroll"
       @keyup.esc="clearInput"
@@ -52,7 +55,7 @@
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, onBeforeMount, ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import {
   useHiveProfile,
@@ -98,8 +101,16 @@ const props = defineProps({
 const emits = defineEmits(['hiveProfile'])
 
 watch(
-  () => input.value,
-  async (username) => {
+  function () {
+    console.log('watch: input.value', input.value)
+    if (selected.value) {
+      if (!input.value) {
+        input.value = selected.value
+      }
+    }
+    return input.value
+  },
+  async function (username) {
     console.log('input.value ---->', username)
     if (!username) {
       clearInput()
@@ -114,7 +125,20 @@ watch(
   }
 )
 
-onMounted(async () => {
+function inputValueFn(val) {
+  console.log('inputValueFn')
+  console.log('inputValueFn val', val)
+  if (!val) {
+    input.value = selected.value
+  }
+}
+
+function focusFn() {
+  console.log('focusFn')
+}
+
+onBeforeMount(async () => {
+  console.log('onBeforeMount')
   if (props.useLoggedInUser && storeUser.isLoggedIn) {
     usernameSuggestions.value = [storeUser.hiveAccname]
     input.value = storeUser.hiveAccname
@@ -181,6 +205,8 @@ function clearInput() {
   input.value = ''
   selected.value = ''
   fullName.value = ''
+  hiveProfile.value = {}
+  hiveAvatar.value = useHiveAvatar('')
   resetSuggestions()
 }
 

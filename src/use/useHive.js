@@ -1,23 +1,21 @@
 import { axios } from 'boot/axios'
+import { Dark } from 'quasar'
+
+const useHiveAccountRegex =
+  /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/
 
 export function useHiveAvatar(username, size = 'medium') {
   // Used the Hive.blog image service to get the avatar for a Hive account
-  
-  if (!username) {
-    return 'avatars/unkown_hive_user.png'
-  }
-  if (username.length > 2) {
-    const re =
-      /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/
-    const validName = username.match(re)
-    if (validName) {
-      return 'https://images.hive.blog/u/' + username + '/avatar/' + size
+  // Returns null if the username is blank or not a valid name.
+  if (!username || !username.match(useHiveAccountRegex)) {
+    console.log('Is dark active: ',Dark.isActive)
+    if (Dark.isActive) {
+      return 'avatars/hive_logo_dark.svg'
     } else {
-      return ''
+      return 'avatars/hive_logo_light.svg'
     }
-  } else {
-    return 'avatars/unkown_hive_user.png'
   }
+  return 'https://images.hive.blog/u/' + username + '/avatar/' + size
 }
 
 export async function useLoadHiveAvatar(username) {
@@ -43,7 +41,7 @@ export async function useLoadHiveAvatar(username) {
 export async function useHiveProfile(hiveAccname) {
   try {
     if (!hiveAccname) {
-      return
+      return null
     }
     let postingJsonMetadata = {}
     const res = await hiveTx.call('condenser_api.get_accounts', [[hiveAccname]])
