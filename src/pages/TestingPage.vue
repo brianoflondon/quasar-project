@@ -125,7 +125,7 @@ watch(search, async (newValue, oldValue) => {
 
 const searchPodcastIndex = async () => {
   const call = `/search/byterm?q=${search.value}&val=lightning`
-  const res = await api.get('/pi/', {
+  const res = await api.get('/pi', {
     params: { call: call },
   })
   if (res?.data?.status === 'true') {

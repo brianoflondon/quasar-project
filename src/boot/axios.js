@@ -3,7 +3,8 @@
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
-let URL = 'https://devapi.v4v.app/v1'
+// let URL = 'https://devapi.v4v.app/v1'
+let URL = 'https://api.v4v.app/v1'
 
 let api = ''
 // api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
