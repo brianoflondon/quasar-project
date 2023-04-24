@@ -4,18 +4,15 @@ import { boot } from 'quasar/wrappers'
 import axios from 'axios'
 
 let URL = 'https://devapi.v4v.app/v1'
-// let URL = 'http://0.0.0.0:1818/v1'
 
 let api = ''
 // api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
 if (window.location.hostname === 'localhost') {
-  console.log('Base URL set: ' + URL)
-  api = axios.create({ baseURL: URL })
-} else {
-  URL = 'https://devapi.v4v.app/v1'
-  console.log('Base URL set: ' + URL)
-  api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
+  // URL = 'http://0.0.0.0:1818/v1'
+  URL = URL
 }
+console.log('Base URL set: ' + URL)
+api = axios.create({ baseURL: URL })
 
 const apiURL = URL
 
