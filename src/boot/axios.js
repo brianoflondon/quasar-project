@@ -12,7 +12,7 @@ if (window.location.hostname === 'localhost') {
   console.log('Base URL set: ' + URL)
   api = axios.create({ baseURL: URL })
 } else {
-  URL = 'https://api.v4v.app/v1'
+  URL = 'https://devapi.v4v.app/v1'
   console.log('Base URL set: ' + URL)
   api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
 }
