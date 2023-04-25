@@ -4,11 +4,14 @@ import { Dark } from 'quasar'
 const useHiveAccountRegex =
   /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/
 
-export function useHiveAvatar(username, size = 'medium') {
+export function useHiveAvatar(
+  username,
+  size = 'medium',
+  reason = 'v4vapp-web'
+) {
   // Used the Hive.blog image service to get the avatar for a Hive account
   // Returns null if the username is blank or not a valid name.
   if (!username || !username.match(useHiveAccountRegex)) {
-    console.log('Is dark active: ', Dark.isActive)
     if (Dark.isActive) {
       return 'avatars/hive_logo_dark.svg'
     } else {
@@ -16,7 +19,7 @@ export function useHiveAvatar(username, size = 'medium') {
     }
   }
   console.log(apiURL + '/hive/avatar/' + username + '/' + size)
-  return apiURL + '/hive/avatar/' + username + '/' + size
+  return apiURL + '/hive/avatar/' + username + '/' + size + '?reason=' + reason
 }
 
 export async function useLoadHiveAvatar(username) {
@@ -51,6 +54,9 @@ export async function useHiveProfile(hiveAccname) {
       if (res.result[0]['posting_json_metadata']) {
         postingJsonMetadata = JSON.parse(res.result[0].posting_json_metadata)
         postingJsonMetadata.profile['hive_accname'] = hiveAccname
+        postingJsonMetadata.profile.name = postingJsonMetadata.profile.name
+          ? postingJsonMetadata.profile.name
+          : hiveAccname
         return postingJsonMetadata.profile
       } else {
         return { name: hiveAccname, hive_accname: hiveAccname }

@@ -149,7 +149,8 @@ async function login() {
       ? storeUser.hiveProfile.name
       : storeUser.hiveAccname
     console.log('albyNameContent', albyNameContent)
-    const albyImageContent = storeUser.profileImageUrl
+    const albyImageContent = storeUser.profileImageUrlAlby
+    console.log('albyImageContent', albyImageContent)
     const albyLightningContent = `${storeUser.hiveAccname}@v4v.app`
     const metaData = {
       meta: {

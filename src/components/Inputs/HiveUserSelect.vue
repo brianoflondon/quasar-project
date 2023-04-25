@@ -186,7 +186,7 @@ async function vScroll(val) {
 
 async function updateHiveProfile() {
   hiveProfile.value = await useHiveProfile(selected.value)
-  fullName.value = hiveProfile.value.name
+  fullName.value = hiveProfile.value.name ? hiveProfile.value.name : ''
   hiveAvatar.value = useHiveAvatar(selected.value)
   console.log('fullName', fullName.value)
   emits('hiveProfile', hiveProfile.value)

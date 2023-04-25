@@ -59,7 +59,7 @@ export class HiveUser {
 export const useStoreUser = defineStore('storeUser', {
   state: () => ({
     isLoggedIn: false,
-    hiveAccname: 'hivehydra',
+    hiveAccname: '',
     hiveProfile: null,
     keySelected: '',
     users: [],
@@ -67,8 +67,13 @@ export const useStoreUser = defineStore('storeUser', {
 
   getters: {
     profileImageUrl: (state) => {
-      if (!state.hiveProfile) return null
+      if (!state.hiveAccname) return null
       return `https://api.v4v.app/v1/hive/avatar/${state.hiveAccname}`
+    },
+    profileImageUrlAlby: (state) => {
+      console.log(state)
+      if (!state.hiveAccname) return null
+      return `https://api.v4v.app/v1/hive/avatar/${state.hiveAccname}?reason=alby`
     },
   },
 
