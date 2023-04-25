@@ -6,14 +6,17 @@ import axios from 'axios'
 // let URL = 'https://devapi.v4v.app/v1'
 let URL = 'https://api.v4v.app/v1'
 
-let api = ''
+
 // api = axios.create({ baseURL: 'https://api.v4v.app/v1' })
 if (window.location.hostname === 'localhost') {
-  URL = 'http://0.0.0.0:1818/v1'
+  try {
+    res = axios.get('http://0.0.0.0:1818/v1', {timeout: 500})
+    if (res.status === 200) URL = 'http://0.0.0.0:1818/v1'
+  } catch (err) { console.log('local api not found')}
   URL = URL
 }
 console.log('Base URL set: ' + URL)
-api = axios.create({ baseURL: URL })
+const api = axios.create({ baseURL: URL })
 
 const apiURL = URL
 
