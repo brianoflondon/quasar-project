@@ -1,7 +1,31 @@
 <template>
   <div class="q-pa-lg">
+    <div v-if="storeUser.isLoggedIn">
+      ✅ Logged In as {{ keychainParams.data.username }} with
+      {{ keySelected }} Key
+    </div>
+    <div v-if="!storeUser.isLoggedIn">▪️ Not Logged In</div>
     <div class="row">
       <div class="col q-pa-sm vertical-middle">
+        <q-input class="v4v-simple-hiveaccount-input"
+          outlined
+          v-model="keychainParams.data.username"
+          label="Hive Account"
+        >
+        <template v-slot:prepend>
+          <q-avatar size="md">
+            <q-img
+              :src="inputAvatar"
+              @error="handleImageError"
+              spinner="bars"
+              loading="lazy"
+            />
+          </q-avatar>
+        </template>
+          <template v-slot:append>
+            <q-icon name="fa-brands fa-hive" color="orange" />
+          </template>
+        </q-input>
         <HiveUserSelect
           label="Login:"
           :use-logged-in-user="false"
@@ -11,41 +35,33 @@
                 ? (keychainParams.data.username = hiveProfile.hive_accname)
                 : (keychainParams.data.username = '')
           "
-          @hiveEnterPressed="login"
         />
       </div>
-    </div>
-    <div class="row">
-      <div class="col q-pa-sm vertical-middle">
-        <q-btn
-          icon="img:keychain/hive-keychain-keys.svg"
-          size="20px"
-          class="login-button hive-keychain"
-          rounded
-          @click="login"
-        >
-        </q-btn>
+      <div class="col-2 q-pa-sm vertical-middle">
+        <q-btn class="vertical-middle" rounded @click="login">Login</q-btn>
       </div>
-      <div class="col q-pa-sm vertical-middle">
-        <q-btn
-          icon="img:has/HiveAuth_logo_safezone.svg"
-          size="20px"
-          class="login-button hive-has"
-          rounded
-          @click="login"
-        >
-        </q-btn>
-      </div>
-      <div class="col q-pa-sm vertical-middle">
-        <q-btn
-          rounded
-          size="20px"
-          @click="logout"
-          class="login-button hive-logout"
-          >Logout</q-btn
-        >
+      <div class="col-2 q-pa-sm vertical-middle">
+        <q-btn @click="logout">Logout</q-btn>
       </div>
     </div>
+    <q-select v-model="keySelected" :options="keyOptions" label="Key" />
+    <div v-if="keychainError">
+      <div>❌ Error</div>
+      <div>{{ keychainError }}</div>
+    </div>
+    <div>
+      <div v-for="user in userList" :key="user.hiveAccname">
+        {{ user.hiveAccname }} - {{ $filters.formatDuration(user.loginAge) }}
+      </div>
+    </div>
+    <h3>User Profile</h3>
+    <pre>
+      {{ storeUser.hiveProfile }}
+    </pre>
+    <h3>User List</h3>
+    <pre>
+      {{ userList }}
+    </pre>
   </div>
 </template>
 
@@ -85,7 +101,7 @@ let timeoutId = null
 watch(
   () => keychainParams.value.data.username,
   async (username) => {
-    if (!username) return
+    if(!username) return
     keychainParams.value.data.username = username.toLowerCase().trim()
     storeUser.isLoggedIn = false
     // Timeout function used to stop excessive calls to missing avatars
@@ -196,12 +212,3 @@ onUnmounted(() => {
   document.removeEventListener('keydown', handleKeyboard)
 })
 </script>
-
-<style lang="sass" scoped>
-.login-button
-  background-color:$primary
-  color: $secondary
-  width: 150px
-  &vertical-middle glossy
-  &vertical-middle glossy
-</style>

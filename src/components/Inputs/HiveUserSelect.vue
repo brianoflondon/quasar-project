@@ -17,6 +17,7 @@
       @filter="filterFn"
       @virtual-scroll="vScroll"
       @keyup.esc="clearInput"
+      @keyup.enter="enterFn"
       @clear="clearInput"
       @keyup.backspace="resetSuggestions"
     >
@@ -55,7 +56,7 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeMount, ref, watch } from 'vue'
+import { onBeforeMount, ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import {
   useHiveProfile,
@@ -99,7 +100,7 @@ const props = defineProps({
   },
 })
 
-const emits = defineEmits(['hiveProfile'])
+const emits = defineEmits(['hiveProfile', 'hiveEnterPressed'])
 
 watch(model, async (newModel, oldModel) => {
   console.log('watching model new', newModel)
@@ -118,31 +119,6 @@ watch(model, async (newModel, oldModel) => {
   }
   clearingInput = false
 })
-
-// watch(
-//   function () {
-//     console.log('watch: model.value', model.value)
-//     if (selected.value) {
-//       if (!model.value) {
-//         model.value = selected.value
-//       }
-//     }
-//     return model.value
-//   },
-//   async function (username) {
-//     console.log('input.value ---->', username)
-//     if (!username) {
-//       clearInput()
-//     }
-//     console.log('input.value ---->', username)
-//     try {
-//       await updateHiveProfile(username)
-//     } catch (e) {
-//       console.log('updateHiveProfile error', e)
-//     }
-//     emits('hiveProfile', hiveProfile.value)
-//   }
-// )
 
 function inputValueFn(val) {
   console.log('inputValueFn')
@@ -192,6 +168,19 @@ async function updateHiveProfile() {
   emits('hiveProfile', hiveProfile.value)
 }
 
+async function enterFn() {
+  console.log('enterFn')
+  console.log('selected.value', selected.value)
+  console.log('model.value', model.value)
+  if (selected.value !== model.value) {
+    console.log('selected.value !== model.value')
+    selected.value = model.value
+    await updateHiveProfile()
+  }
+  emits('hiveProfile', hiveProfile.value)
+  emits('hiveEnterPressed', true)
+}
+
 async function filterFn(val, update, abort) {
   if (val.length < 2) {
     abort()
@@ -233,7 +222,6 @@ function clearInput() {
   resetSuggestions()
   emits('hiveProfile', hiveProfile.value)
 }
-
 
 function resetSuggestions() {
   usernameSuggestions.value = staticSuggestions

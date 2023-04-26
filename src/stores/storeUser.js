@@ -33,29 +33,6 @@ export class HiveUser {
   }
 }
 
-// bad idea
-// const customStorageUsers = {
-//   getItem(key) {
-//     const value = localStorage.getItem(key)
-//     if (value) {
-//       console.log('key', key, 'value', value)
-//       return value
-//       const users = JSON.parse(JSON.parse(value)).users
-//       const hiveUsers = users.map((user) => {
-//         const { hiveAccname, keySelected, timestamp } = user
-//         return new HiveUser(hiveAccname, keySelected, timestamp)
-//       })
-//       return hiveUsers
-//       // return value
-//     }
-//     return undefined
-//   },
-//   setItem(key, value) {
-//     localStorage.setItem(key, JSON.stringify(value))
-//     console.log('key', key, 'value', value)
-//   },
-// }
-
 export const useStoreUser = defineStore('storeUser', {
   state: () => ({
     isLoggedIn: false,
@@ -96,9 +73,6 @@ export const useStoreUser = defineStore('storeUser', {
     },
     logout() {
       console.log('logout')
-      // this.users = this.users.filter(
-      //   (obj) => obj.hiveAccname !== this.hiveAccname
-      // )
       this.isLoggedIn = false
       this.hiveAccname = ''
       this.keySelected = ''

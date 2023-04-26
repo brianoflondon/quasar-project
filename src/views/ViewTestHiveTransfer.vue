@@ -3,9 +3,9 @@
     <q-card class="q-pa-sm">
       <div class="row q-pa-sm destinations">
         <div class="col-6 q-pr-sm v4vapp-sending-from">
-          {{ $t('sending') + ' ' + $t('from') }}
+          {{ sendingFromLabel }}
           <HiveUserSelect
-            :label="sendFrom ? sendFrom : $t('sending') + ' ' + $t('from')"
+            :label="sendingFromLabel"
             :use-logged-in-user="true"
             @hiveProfile="
               (hiveProfile) =>
@@ -16,9 +16,9 @@
           />
         </div>
         <div class="col-6 q-pr-sm v4vapp-sending-to">
-          {{ $t('sending') + ' ' + $t('to') }}
+          {{ sendingToLabel }}
           <HiveUserSelect
-            :label="sendTo ? sendTo : $t('sending') + ' ' + $t('to')"
+            :label="sendingToLabel"
             :use-logged-in-user="false"
             :pre-filled="sendTo ? sendTo : ''"
             @hiveProfile="
@@ -97,6 +97,8 @@ import { useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
+import { useI18n } from 'vue-i18n'
+const t = useI18n().t
 
 const $q = useQuasar()
 const storeUser = useStoreUser()
@@ -149,6 +151,14 @@ defineComponent({
 
 const sendFrom = ref('')
 const sendTo = ref('')
+
+const sendingFromLabel = computed(
+  () => t('sending') + ' ' + t('from') + ' ' + sendFrom.value
+)
+
+const sendingToLabel = computed(
+  () => t('sending') + ' ' + t('to') + ' ' + sendTo.value
+)
 
 const hiveAmount = computed(() => {
   console.log(optionsSelected.value)
