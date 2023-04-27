@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import 'src/assets/hive-tx.min.js'
+import { useHiveProfile } from 'src/use/useHive.js'
 
 // import { LocalStorage, SessionStorage } from 'quasar'
 
@@ -55,7 +56,7 @@ export const useStoreUser = defineStore('storeUser', {
   },
 
   actions: {
-    login(hiveAccname, keySelected) {
+    async login(hiveAccname, keySelected) {
       const newUser = new HiveUser(hiveAccname, keySelected)
       this.users = this.users.filter(
         (obj) => obj.hiveAccname !== this.hiveAccname
@@ -65,7 +66,7 @@ export const useStoreUser = defineStore('storeUser', {
       this.hiveAccname = hiveAccname
       this.keySelected = keySelected
       try {
-        this.getHiveProfile()
+        this.hiveProfile = await useHiveProfile(hiveAccname)
       } catch (err) {
         console.log(err)
         console.log('session save failed')
@@ -93,17 +94,8 @@ export const useStoreUser = defineStore('storeUser', {
     },
     getHiveProfile() {
       const getAccounts = async () => {
-        try {
-          const res = await hiveTx.call('condenser_api.get_accounts', [
-            [this.hiveAccname],
-          ])
-          const postingJsonMetadat = JSON.parse(
-            res.result[0].posting_json_metadata
-          )
-          this.hiveProfile = postingJsonMetadat.profile
-        } catch (err) {
-          console.log(err)
-        }
+        // need to replace this with useHiveProfile
+        this.hiveProfile = await useHiveProfile(this.hiveAccname)
       }
       getAccounts()
     },

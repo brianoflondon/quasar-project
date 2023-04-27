@@ -55,7 +55,9 @@ import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
 import { HiveUser, useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
 import { useLoadHiveAvatar } from 'src/use/useHive'
-import { useQuasar, useMeta } from 'quasar'
+import { useQuasar } from 'quasar'
+import { useSetAlbyMeta } from 'src/use/useAlby'
+import { useGetVestsHPConversion } from 'src/use/useHive'
 import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
@@ -78,21 +80,35 @@ const keychainParams = ref({
   options: {},
 })
 
-const inputAvatar = ref('')
+const inputAvatar = ref(null)
 
 const loginLabel = computed(() => {
+  console.log('loginLabel')
   if (keychainParams.value.data.username !== '') {
     return `Login as: ${keychainParams.value.data.username}`
   }
   return storeUser.hiveAccname ? `Logged in ${storeUser.hiveAccname}` : 'Login:'
 })
 
+onMounted(async () => {
+  document.addEventListener('keydown', handleKeyboard)
+  inputAvatar.value = await useLoadHiveAvatar(
+    keychainParams.value.data.username
+  )
+  console.log('mounted users', storeUser.users)
+  console.log(userList.value)
+})
+
+onUnmounted(() => {
+  document.removeEventListener('keydown', handleKeyboard)
+})
 
 let timeoutId = null
 // watch for changes in the keychainParams.value.data.username
 watch(
   () => keychainParams.value.data.username,
   async (username) => {
+    console.log(loginLabel.value)
     if (!username) return
     keychainParams.value.data.username = username.toLowerCase().trim()
     storeUser.isLoggedIn = false
@@ -134,37 +150,7 @@ async function login() {
     storeUser.hiveAccname = keychainParams.value.data.username
     storeUser.login(keychainParams.value.data.username, keySelected.value)
     $q.notify(`User ${keychainParams.value.data.username} logged in`)
-    // add Meta tags for Alby
-    console.log('alby')
-    storeUser.getHiveProfile()
-    const albyNameContent = storeUser.hiveProfile
-      ? storeUser.hiveProfile.name
-      : storeUser.hiveAccname
-    console.log('albyNameContent', albyNameContent)
-    const albyImageContent = storeUser.profileImageUrlAlby
-    console.log('albyImageContent', albyImageContent)
-    const albyLightningContent = `${storeUser.hiveAccname}@v4v.app`
-    const metaData = {
-      meta: {
-        albyName: {
-          name: 'alby:name',
-          content: albyNameContent,
-        },
-        albyImage: {
-          name: 'alby:image',
-          content: albyImageContent,
-        },
-        property: {
-          name: 'lightning',
-          content: albyLightningContent,
-        },
-        description: {
-          name: 'description',
-          content: `Hive User ${storeUser.hiveAccname} is using V4V.app`,
-        },
-      },
-    }
-    useMeta(metaData)
+    await useSetAlbyMeta(keychainParams.value.data.username)
   } catch (error) {
     console.log('❌ failure')
     console.log({ error })
@@ -190,19 +176,6 @@ const handleKeyboard = (event) => {
     login()
   }
 }
-
-onMounted(async () => {
-  document.addEventListener('keydown', handleKeyboard)
-  inputAvatar.value = await useLoadHiveAvatar(
-    keychainParams.value.data.username
-  )
-  console.log('mounted users', storeUser.users)
-  console.log(userList.value)
-})
-
-onUnmounted(() => {
-  document.removeEventListener('keydown', handleKeyboard)
-})
 </script>
 
 <style lang="sass" scoped>

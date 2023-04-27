@@ -2,7 +2,7 @@
   <div v-if="hiveProfile">
     <q-card class="test-card" style="max-width: 250">
       <q-card-section>
-        <q-img :src="useHiveAvatar(hiveProfile.hive_accname, 'large')">
+        <q-img :src="hiveAvatar">
           <div class="absolute-bottom text-subtitle2 text-center">
             {{ hiveProfile.name }}<br />
             @{{ hiveProfile.hive_accname }}
@@ -14,13 +14,19 @@
 </template>
 
 <script setup>
-import { useHiveAvatar } from 'src/use/useHive'
+import { useHiveAvatarRef } from 'src/use/useHive'
 const props = defineProps({
   hiveProfile: {
     type: Object,
     required: true,
   },
 })
+
+const hiveAvatar = useHiveAvatarRef({
+  hiveAccname: props.hiveProfile.hive_accname,
+})
+
+
 </script>
 
 <style lang="sass" scoped>

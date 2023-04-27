@@ -65,7 +65,6 @@
 
 <script setup>
 import { defineComponent, ref, watch } from 'vue'
-// import { name, version } from '../../package.json'
 import { getAppDetails } from 'src/components/getAppDetails.js'
 import HiveUserPicker from 'src/components/Inputs/HiveUserPicker.vue'
 import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'

@@ -63,7 +63,7 @@ import { useStoreUser } from 'src/stores/storeUser'
 import {
   useHiveProfile,
   useLoadHiveAccountsReputation,
-  useHiveAvatar,
+  useHiveAvatarURL,
 } from 'src/use/useHive'
 import HiveProfileTestCard from 'src/components/Display/HiveProfileTestCard.vue'
 import badActorList from '@hiveio/hivescript/bad-actors.json'
@@ -76,7 +76,7 @@ const usernameSuggestions = ref(staticSuggestions)
 const selected = ref('')
 const fullName = ref('')
 const hiveProfile = ref({})
-const hiveAvatar = ref(useHiveAvatar(''))
+const hiveAvatar = ref(useHiveAvatarURL(''))
 const badActors = ref(badActorList)
 let clearingInput = false // used as a flag to allow deliberate clearing of the input
 
@@ -164,7 +164,7 @@ console.log('----------------------- HiveUserSelect -----------------------')
 
 async function vScroll(val) {
   console.log('vScroll', val)
-  hiveAvatar.value = useHiveAvatar(selected.value)
+  hiveAvatar.value = useHiveAvatarURL({ hiveAccname: selected.value, size: 'small' })
   selected.value = usernameSuggestions.value[val.index]
   model.value = selected.value
   await updateHiveProfile()
@@ -174,7 +174,7 @@ async function vScroll(val) {
 async function updateHiveProfile() {
   hiveProfile.value = await useHiveProfile(selected.value)
   fullName.value = hiveProfile.value.name ? hiveProfile.value.name : ''
-  hiveAvatar.value = useHiveAvatar(selected.value)
+  hiveAvatar.value = useHiveAvatarURL({ hiveAccname: selected.value, size: 'small' })
   console.log('fullName', fullName.value)
   emits('hiveProfile', hiveProfile.value)
 }
@@ -229,7 +229,7 @@ function clearInput() {
   selected.value = ''
   fullName.value = ''
   hiveProfile.value = {}
-  hiveAvatar.value = useHiveAvatar('')
+  hiveAvatar.value = useHiveAvatarURL('')
   resetSuggestions()
   emits('hiveProfile', hiveProfile.value)
 }

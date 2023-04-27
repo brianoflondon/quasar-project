@@ -41,7 +41,7 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
-import { useHiveAvatar } from 'src/use/useHive'
+import { useHiveAvatarURL } from 'src/use/useHive'
 // This comes from https://github.com/ecency/hivescript
 import badActorList from '@hiveio/hivescript/bad-actors.json'
 import 'src/assets/hive-tx.min.js'
@@ -62,11 +62,11 @@ const changingLabel = ref(props.label)
 
 // start off using the logged in user if available
 const model = ref(null)
-const hiveAvatar = ref(useHiveAvatar(''))
+const hiveAvatar = ref(useHiveAvatarURL(''))
 
 if (props.useLoggedInUser && storeUser.isLoggedIn) {
   model.value = storeUser.hiveAccname
-  hiveAvatar.value = useHiveAvatar(storeUser.hiveAccname)
+  hiveAvatar.value = useHiveAvatarURL(storeUser.hiveAccname)
 }
 
 const emits = defineEmits(['hiveAccname'])
@@ -85,10 +85,10 @@ function setModel(val) {
 
 watch(model, async (val) => {
   if (val === null) {
-    hiveAvatar.value = useHiveAvatar('')
+    hiveAvatar.value = useHiveAvatarURL('')
     return
   }
-  hiveAvatar.value = useHiveAvatar(val)
+  hiveAvatar.value = useHiveAvatarURL(val)
   changingLabel.value = props.label + ' @' + options.value[0]
   console.log(changingLabel.value)
   emits('hiveAccname', model.value)
@@ -118,7 +118,7 @@ async function searchHiveUsernames(val) {
     ])
     const accounts = res.result.map((el) => el.account)
     options.value = accounts
-    hiveAvatar.value = useHiveAvatar(accounts[0])
+    hiveAvatar.value = useHiveAvatarURL(accounts[0])
   } catch (error) {
     console.log(error)
   }
@@ -127,7 +127,7 @@ async function searchHiveUsernames(val) {
 function clearInput() {
   model.value = ''
   options.value = []
-  hiveAvatar.value = useHiveAvatar('')
+  hiveAvatar.value = useHiveAvatarURL('')
 }
 
 async function inputRecv(e) {
