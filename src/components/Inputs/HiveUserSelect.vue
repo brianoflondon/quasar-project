@@ -2,7 +2,9 @@
   <div>
     <q-select
       v-autofocus
+      class="hive-user-select"
       :label="label"
+      :label-color="labelColor"
       :multiple="false"
       clearable
       filled
@@ -56,7 +58,7 @@
 </template>
 
 <script setup>
-import { onBeforeMount, ref, watch } from 'vue'
+import { computed, onBeforeMount, ref, watch } from 'vue'
 import { useStoreUser } from 'src/stores/storeUser'
 import {
   useHiveProfile,
@@ -65,7 +67,7 @@ import {
 } from 'src/use/useHive'
 import HiveProfileTestCard from 'src/components/Display/HiveProfileTestCard.vue'
 import badActorList from '@hiveio/hivescript/bad-actors.json'
-
+import { Dark } from 'quasar'
 const staticSuggestions = []
 
 const storeUser = useStoreUser()
@@ -77,6 +79,15 @@ const hiveProfile = ref({})
 const hiveAvatar = ref(useHiveAvatar(''))
 const badActors = ref(badActorList)
 let clearingInput = false // used as a flag to allow deliberate clearing of the input
+
+const labelColor = computed(() => {
+  console.log('labelColor')
+  if (Dark.isActive) {
+    return 'negative'
+  } else {
+    return 'primary'
+  }
+})
 
 const props = defineProps({
   // Label for the input
@@ -227,15 +238,3 @@ function resetSuggestions() {
   usernameSuggestions.value = staticSuggestions
 }
 </script>
-
-<style lang="sass" scoped>
-.test-card
-  width: 100%
-  max-width: 400px
-  height: 100%
-
-.test-card img
-  width: 100%
-  height: 100%
-  object-fit: cover
-</style>
