@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col q-pa-sm vertical-middle">
         <HiveUserSelect
-          label="Login:"
+          :label="loginLabel"
           :use-logged-in-user="false"
           @hiveProfile="
             (hiveProfile) =>
@@ -79,6 +79,14 @@ const keychainParams = ref({
 })
 
 const inputAvatar = ref('')
+
+const loginLabel = computed(() => {
+  if (keychainParams.value.data.username !== '') {
+    return `Login as: ${keychainParams.value.data.username}`
+  }
+  return storeUser.hiveAccname ? `Logged in ${storeUser.hiveAccname}` : 'Login:'
+})
+
 
 let timeoutId = null
 // watch for changes in the keychainParams.value.data.username
