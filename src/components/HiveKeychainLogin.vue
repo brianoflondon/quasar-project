@@ -32,7 +32,7 @@
           size="20px"
           class="login-button hive-has"
           rounded
-          @click="login"
+          @click="loginHAS"
         >
         </q-btn>
       </div>
@@ -52,13 +52,15 @@
 <script setup>
 import { KeychainSDK } from 'keychain-sdk'
 import { onMounted, onUnmounted, computed, ref, watch } from 'vue'
-import { HiveUser, useStoreUser } from 'src/stores/storeUser'
+import { useStoreUser } from 'src/stores/storeUser'
 import { useStoreAPIStatus } from 'src/stores/storeAPIStatus'
-import { useLoadHiveAvatar } from 'src/use/useHive'
+import { useLoadHiveAvatar, useHiveKeychainLogin } from 'src/use/useHive'
 import { useQuasar } from 'quasar'
 import { useSetAlbyMeta } from 'src/use/useAlby'
-import { useGetVestsHPConversion } from 'src/use/useHive'
 import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
+import HAS from './Inputs/HAS.vue'
+import { useI18n } from 'vue-i18n'
+const t = useI18n().t
 const $q = useQuasar()
 const storeAPIStatus = useStoreAPIStatus()
 const storeUser = useStoreUser()
@@ -122,10 +124,6 @@ watch(
   }
 )
 
-function handleImageError() {
-  inputAvatar.value = 'avatars/unkown_hive_user.png'
-}
-
 watch(
   () => keychainParams.value.data.method,
   () => {
@@ -133,20 +131,51 @@ watch(
   }
 )
 
+async function loginHAS() {
+  console.log('loginHAS')
+  showHASDialog()
+  // await useHAS(keychainParams.value.data.username)
+}
+
+function showHASDialog() {
+  $q.dialog({
+    component: HAS,
+
+    // props forwarded to your custom component
+    componentProps: {
+      hiveAccname: keychainParams.value.data.username,
+      // ...more..props...
+    },
+  })
+    .onOk(() => {
+      console.log('OK')
+    })
+    .onCancel(() => {
+      console.log('Cancel')
+    })
+    .onDismiss(() => {
+      console.log('Called on OK or Cancel')
+    })
+}
+
 async function login() {
   try {
     if (!storeAPIStatus.isKeychainIn) {
-      $q.notify('Keychain is not installed')
-      console.log('Keychain is not installed')
+      $q.notify(t('keychain_missing'))
+      console.log(t('keychain_missing'))
       return
     }
     $q.notify('Contacting Keychain')
-    const login = await keychain.login(
-      keychainParams.value.data,
-      keychainParams.value.options
-    )
+    const loginResult = await useHiveKeychainLogin({
+      hiveAccname: keychainParams.value.data.username,
+      keyType: keySelected.value,
+    })
+    // const loginResult = await keychain.login(
+    //   keychainParams.value.data,
+    //   keychainParams.value.options
+    // )
     keychainError.value = ''
-    console.log('✅ success', login)
+    console.log('✅ success', loginResult)
     storeUser.hiveAccname = keychainParams.value.data.username
     storeUser.login(keychainParams.value.data.username, keySelected.value)
     $q.notify(`User ${keychainParams.value.data.username} logged in`)
@@ -155,7 +184,7 @@ async function login() {
     console.log('❌ failure')
     console.log({ error })
     keychainError.value = error
-    $q.notify(`${error.message}`)
+    // $q.notify(`${error.message}`)
   }
 }
 
@@ -180,9 +209,7 @@ const handleKeyboard = (event) => {
 
 <style lang="sass" scoped>
 .login-button
-  background-color:$primary
+  background-color: $primary
   color: $secondary
-  width: 150px
-  &vertical-middle glossy
-  &vertical-middle glossy
+  width: 120px
 </style>

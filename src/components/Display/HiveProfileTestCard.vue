@@ -25,8 +25,6 @@ const props = defineProps({
 const hiveAvatar = useHiveAvatarRef({
   hiveAccname: props.hiveProfile.hive_accname,
 })
-
-
 </script>
 
 <style lang="sass" scoped>
@@ -35,8 +33,8 @@ const hiveAvatar = useHiveAvatarRef({
   max-width: 400px
   height: 100%
 
-.test-card img
-  width: 100%
-  height: 100%
-  object-fit: cover
+  .img
+    width: 100%
+    height: 100%
+    object-fit: cover
 </style>

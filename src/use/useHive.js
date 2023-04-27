@@ -1,9 +1,14 @@
 import { axios, apiURL } from 'boot/axios'
 import { Dark } from 'quasar'
 import { ref } from 'vue'
+import { KeychainSDK } from 'keychain-sdk'
 
 const useHiveAccountRegex =
   /^(?=.{3,16}$)[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){2,}([.](?=[a-z][0-9a-z-][0-9a-z-])[a-z]([0-9a-z]|[0-9a-z-](?=[0-9a-z])){1,}){0,}$/
+
+/*************************************************
+ ****     Avatar related funcitons
+ **************************************************/
 
 export function useHiveAvatarRef({
   hiveAccname,
@@ -101,6 +106,60 @@ export async function useLoadHiveAccountsReputation(val, maxAccounts = 6) {
     console.log(error)
   }
 }
+
+
+
+/*************************************************
+ ****     Hive Keycahin Functions
+ **************************************************/
+
+const keychain = new KeychainSDK(window)
+
+export async function useIsHiveKeychainInstalled() {
+  try {
+    const isKeychainIn = await keychain.isKeychainInstalled()
+    return isKeychainIn
+  } catch (error) {
+    console.log({ error })
+  }
+}
+
+export async function useHiveKeychainLogin({
+  hiveAccname,
+  message = null,
+  keyType = 'posting',
+}) {
+  const isKeychainIn = await keychain.isKeychainInstalled()
+  if (!isKeychainIn || !hiveAccname) {
+    return null
+  }
+  if (!message) {
+    message = 'Login to V4Vapp ' + new Date().getTime()
+  }
+  const keychainParams = {
+    data: {
+      username: hiveAccname,
+      message: message,
+      method: keyType,
+      title: 'Login',
+    },
+    options: {},
+  }
+  try {
+    const loginResult = await keychain.login(
+      keychainParams.data,
+      keychainParams.options
+    )
+    return loginResult
+  } catch (error) {
+    console.log({ error })
+    return error
+  }
+}
+
+/*************************************************
+ ****     General Hive Functions
+ **************************************************/
 
 export async function useGetVestsHPConversion() {
   // returns the conversion rate between VESTS and HIVE Power
