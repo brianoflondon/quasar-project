@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import 'src/assets/hive-tx.min.js'
-import { useHiveProfile } from 'src/use/useHive.js'
+import { useHiveProfile, useHiveAvatarURL } from 'src/use/useHive.js'
 
 // import { LocalStorage, SessionStorage } from 'quasar'
 
@@ -45,13 +45,13 @@ export const useStoreUser = defineStore('storeUser', {
 
   getters: {
     profileImageUrl: (state) => {
-      if (!state.hiveAccname) return null
-      return `https://api.v4v.app/v1/hive/avatar/${state.hiveAccname}`
+      return useHiveAvatarURL({ hiveAccname: state.hiveAccname })
     },
     profileImageUrlAlby: (state) => {
-      console.log(state)
-      if (!state.hiveAccname) return null
-      return `https://api.v4v.app/v1/hive/avatar/${state.hiveAccname}?reason=alby`
+      return useHiveAvatarURL({
+        hiveAccname: state.hiveAccname,
+        reason: 'alby',
+      })
     },
   },
 
@@ -94,7 +94,6 @@ export const useStoreUser = defineStore('storeUser', {
     },
     getHiveProfile() {
       const getAccounts = async () => {
-        // need to replace this with useHiveProfile
         this.hiveProfile = await useHiveProfile(this.hiveAccname)
       }
       getAccounts()
