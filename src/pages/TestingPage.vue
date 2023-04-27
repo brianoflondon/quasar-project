@@ -13,6 +13,7 @@
           :use-logged-in-user="false"
           :testing="testing"
           @hiveProfile="recvHiveProfile"
+          @hiveEnterPressed="enterPressed"
         />
       </keep-alive>
     </div>
@@ -107,6 +108,10 @@ function recvHiveProfile(object) {
     label.value = baseLabel
     console.log(label.value)
   }
+}
+
+function enterPressed() {
+  console.log('enterPressed')
 }
 
 /*

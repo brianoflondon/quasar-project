@@ -111,7 +111,6 @@ const title = `${t('system_status_title')} ${storeAPIStatus.statusDisp}`
 const alert = ref(false)
 </script>
 
-<!-- notice lang="sass" -->
 <style lang="scss">
 /* This is where your SCSS goes */
 .body--dark {
