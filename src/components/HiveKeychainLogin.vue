@@ -58,7 +58,7 @@ import { useLoadHiveAvatar, useHiveKeychainLogin } from 'src/use/useHive'
 import { useQuasar } from 'quasar'
 import { useSetAlbyMeta } from 'src/use/useAlby'
 import HiveUserSelect from 'src/components/Inputs/HiveUserSelect.vue'
-import HASAuthenticate from './Inputs/HASAuthenticate.vue'
+// import HASAuthenticate from './Inputs/HASAuthenticate.vue'
 import { useI18n } from 'vue-i18n'
 const t = useI18n().t
 const $q = useQuasar()
