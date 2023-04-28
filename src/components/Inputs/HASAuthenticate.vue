@@ -3,6 +3,12 @@
     <q-card class="q-dialog-plugin">
       <div>HAS Login for {{ hiveAccname }}</div>
       <div ref="qrCodeContainer" />
+      <div
+        class="qr-code-text"
+        style="overflow-wrap: break-word; word-break: break-all"
+      >
+        {{ qrCodeText }}
+      </div>
       <!--
         ...content
         ... use q-card-section for it?
@@ -19,10 +25,14 @@
 
 <script setup>
 import { useDialogPluginComponent } from 'quasar'
-import { ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { useHiveAvatarURL } from 'src/use/useHive'
 import HAS from 'hive-auth-wrapper'
 import QRCodeStyling from 'qr-code-styling'
+
+defineComponent({
+  name: 'HASAuthenticate',
+})
 
 const props = defineProps({
   hiveAccname: {
@@ -37,6 +47,7 @@ defineEmits([
   ...useDialogPluginComponent.emits,
 ])
 const res = ref('waiting...')
+const qrCodeText = ref('waiting...')
 const qrCodeContainer = ref(null)
 
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
@@ -104,6 +115,7 @@ function processAuthWaitEvent(evt) {
   }
   const encoded = btoa(JSON.stringify(authPayload))
   const url = `has://auth_req/${encoded}`
+  qrCodeText.value = url
   onScreen.value = url
   console.log(url)
   const hiveAvatar = useHiveAvatarURL({ hiveAccname: props.hiveAccname })
