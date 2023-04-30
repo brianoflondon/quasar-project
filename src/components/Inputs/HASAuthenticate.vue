@@ -27,7 +27,8 @@
 import { useDialogPluginComponent } from 'quasar'
 import { defineComponent, ref } from 'vue'
 import { useHiveAvatarURL } from 'src/use/useHive'
-import HAS from 'hive-auth-wrapper'
+import { HAS } from 'boot/has'
+// import HAS from 'hive-auth-wrapper'
 import QRCodeStyling from 'qr-code-styling'
 
 defineComponent({

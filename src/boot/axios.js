@@ -25,7 +25,7 @@ function checkLocal() {
 }
 
 
-checkLocal()
+// checkLocal()
 const apiURL = URL
 console.log('Base URL set: ' + URL)
 const api = axios.create({ baseURL: URL })
