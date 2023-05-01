@@ -2,6 +2,7 @@
 
 import { boot } from 'quasar/wrappers'
 import axios from 'axios'
+import { errorCorrectionLevels } from 'qr-code-styling'
 
 // let URL = 'https://devapi.v4v.app/v1'
 let URL = 'https://api.v4v.app/v1'
@@ -9,23 +10,37 @@ let URL = 'https://api.v4v.app/v1'
 function checkLocal() {
   if (window.location.hostname === 'localhost') {
     console.log('searching for local API server')
-    const xhr = new XMLHttpRequest()
-    xhr.open('GET', 'http://0.0.0.0:1818/v1', false) // make synchronous request
-    xhr.send()
-    if (xhr.readyState === 4) {
-      // request completed
-      if (xhr.status === 200) {
-        console.log('Local API server found')
-        URL = 'http://0.0.0.0:1818/v1'
-      } else {
+    axios
+      .get('http://127.0.0.1:1818/v1')
+      .then((response) => {
+        if (response.status === 200) {
+          console.log('Local API server found')
+          URL = 'http://127.0.0.1:1818/v1'
+        }
+      })
+      .catch((error) => {
         console.log('Local API server not found')
-      }
-    }
+      })
   }
 }
 
-
 // checkLocal()
+
+// console.log('searching for local API server')
+// fetch('http://127.0.0.1:1818/v1')
+//   .then((response) => {
+//     if (response.status === 200) {
+//       console.log('Local API server found')
+//       URL = 'http://127.0.0.1:1818/v1'
+//     } else {
+//       console.log('Local API server not found')
+//     }
+//   })
+//   .catch((error) => {
+//     console.log('Local API server not found')
+//   })
+// console.log('Base URL set: ' + URL)
+
 const apiURL = URL
 console.log('Base URL set: ' + URL)
 const api = axios.create({ baseURL: URL })

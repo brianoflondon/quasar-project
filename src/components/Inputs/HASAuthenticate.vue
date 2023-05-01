@@ -27,9 +27,10 @@
 import { useDialogPluginComponent } from 'quasar'
 import { defineComponent, ref } from 'vue'
 import { useHiveAvatarURL } from 'src/use/useHive'
-import { HAS } from 'boot/has'
-// import HAS from 'hive-auth-wrapper'
+import { useStoreUser } from 'src/stores/storeUser'
 import QRCodeStyling from 'qr-code-styling'
+
+const storeUser = useStoreUser()
 
 defineComponent({
   name: 'HASAuthenticate',
@@ -61,7 +62,8 @@ const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } =
 // onDialogCancel - Function to call to settle dialog with "cancel" outcome
 
 console.log('Running in the HAS component hiveAccname', props.hiveAccname)
-HAFAuth()
+storeUser.loginHAS(props.hiveAccname, 'posting')
+
 
 // this is part of our example (so not required)
 function onOKClick() {
