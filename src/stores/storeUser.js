@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import 'src/assets/hive-tx.min.js'
 import { useHiveProfile, useHiveAvatarURL } from 'src/use/useHive.js'
-import HAS from 'hive-auth-wrapper'
+// import HAS from 'hive-auth-wrapper'
 import QRCodeStyling from 'qr-code-styling'
 
 // import { LocalStorage, SessionStorage } from 'quasar'
